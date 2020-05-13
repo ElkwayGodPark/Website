@@ -1,0 +1,575 @@
+---
+title: 'Project 1: Exploratory Data Analysis'
+author: "William Graber"
+date: '03/08/2020'
+output:
+  pdf_document:
+    toc: no
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+fig_caption: yes
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The two datasets that were chosen are a 2016 national county voting data dataset, and a 2016 national county health outcomes data dataset. Both are organized by row, with each row being a county. The voting data contains a variety of statistics, like percentage of a count voting base under 29, percentage of a county living rurally, total voting age population of a county, votes recorded for democratic senate races, votes recorded for 3rd party presidential races, etc. The health outcomes dataset is massive, with more than 160 variables available. This is obviously far more than necessary. The dataset included a subset containing a variety of health outcome factors (quality of life, socioeconomic status, etc.) in both a county ranking format (from 1 to n in each state) and in quartile format (1-4) for each county in the United States. The voting data was sourced from the MIT election lab, and the health outcomes data was from www.countyhealthrankings.org.</p>
+<p>I wanted to join these two datasets because I was curious as to how two particular variables from the health outcomes data, socioeconomic status and quality of life, were correlated with the 2016 presidential race results. I’ve always had an interest in politics and elections in general. Many of the frequent narratives surrounding elections, like rural voters voting republican or minority voters voting democrat, are things that I take as fact without ever having seen any data to support them. In particular, I find that socioeconomic status and quality of life are two variables in which I’ve rarely seen any data to either support or refute frequently made claims surrounding these variables in elections. I decided I wanted to explore them myself and find out whether those two factors actually do influence a county’s voting decisions.
+# Data Cleaning and Joining
+### Data Cleaning
+The datasets are both very large, and each has multiple variables that are of less interest. Before performing any analysis, the data should be cleaned and adjusted to better serve this project.</p>
+<pre class="r"><code># reformat the demo_16 dataset
+demo_16 &lt;- demo_16 %&gt;% select(state, county, fips, trump16, 
+    clinton16, otherpres16, cvap, age29andunder_pct, age65andolder_pct, 
+    rural_pct) %&gt;% rename(rep_pres = trump16, dem_pres = clinton16, 
+    other_pres = otherpres16, pct_29 = age29andunder_pct, 
+    pct_65 = age65andolder_pct, pct_rural = rural_pct)
+# reformat the health_16 dataset
+health_16 &lt;- health_16 %&gt;% select(FIPS, State, County, quality_r, 
+    quality_q, ses_r, ses_q) %&gt;% rename(state = State, county = County, 
+    fips = FIPS)
+health_16$fips &lt;- as.numeric(health_16$fips)</code></pre>
+<p>This is just a short demonstration of the pivot functions on demo_16, as there was no appropriate place to use pivot_wider naturally.</p>
+<pre class="r"><code># pivot longer
+demo_16 &lt;- demo_16 %&gt;% pivot_longer(contains(&quot;pres&quot;), names_to = &quot;president&quot;, 
+    values_to = &quot;pres_votes&quot;) %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 9,342
+## Variables: 9
+## $ state      &lt;chr&gt; &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;...
+## $ county     &lt;chr&gt; &quot;Autauga&quot;, &quot;Autauga&quot;, &quot;Autauga&quot;, &quot;Baldwin&quot;, &quot;Baldwin&quot;, &quot;...
+## $ fips       &lt;dbl&gt; 1001, 1001, 1001, 1003, 1003, 1003, 1005, 1005, 1005, 10...
+## $ cvap       &lt;dbl&gt; 40690, 40690, 40690, 151770, 151770, 151770, 20375, 2037...
+## $ pct_29     &lt;dbl&gt; 40.03706, 40.03706, 40.03706, 35.47441, 35.47441, 35.474...
+## $ pct_65     &lt;dbl&gt; 13.97846, 13.97846, 13.97846, 18.71485, 18.71485, 18.714...
+## $ pct_rural  &lt;dbl&gt; 42.00216, 42.00216, 42.00216, 42.27910, 42.27910, 42.279...
+## $ president  &lt;chr&gt; &quot;rep_pres&quot;, &quot;dem_pres&quot;, &quot;other_pres&quot;, &quot;rep_pres&quot;, &quot;dem_p...
+## $ pres_votes &lt;dbl&gt; 18172, 5936, 865, 72883, 18458, 3874, 5454, 4871, 144, 6...</code></pre>
+<p>Now that the data has been pivoted longer, let’s pivot it back to the wider state</p>
+<pre class="r"><code># pivot wider
+demo_16 &lt;- demo_16 %&gt;% pivot_wider(names_from = &quot;president&quot;, 
+    values_from = &quot;pres_votes&quot;) %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 3,114
+## Variables: 10
+## $ state      &lt;chr&gt; &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;...
+## $ county     &lt;chr&gt; &quot;Autauga&quot;, &quot;Baldwin&quot;, &quot;Barbour&quot;, &quot;Bibb&quot;, &quot;Blount&quot;, &quot;Bull...
+## $ fips       &lt;dbl&gt; 1001, 1003, 1005, 1007, 1009, 1011, 1013, 1015, 1017, 10...
+## $ cvap       &lt;dbl&gt; 40690, 151770, 20375, 17590, 42430, 8195, 15425, 88525, ...
+## $ pct_29     &lt;dbl&gt; 40.03706, 35.47441, 37.66439, 37.32943, 37.24005, 37.935...
+## $ pct_65     &lt;dbl&gt; 13.97846, 18.71485, 16.52889, 14.88570, 17.19292, 15.134...
+## $ pct_rural  &lt;dbl&gt; 42.00216, 42.27910, 67.78963, 68.35261, 89.95150, 51.374...
+## $ rep_pres   &lt;dbl&gt; 18172, 72883, 5454, 6738, 22859, 1140, 4901, 32865, 7843...
+## $ dem_pres   &lt;dbl&gt; 5936, 18458, 4871, 1874, 2156, 3530, 3726, 13242, 5784, ...
+## $ other_pres &lt;dbl&gt; 865, 3874, 144, 207, 573, 40, 105, 1757, 273, 233, 377, ...</code></pre>
+<div id="joining-datasets" class="section level3">
+<h3>Joining Datasets</h3>
+<p>We are now ready to join together our datasets. We are using an inner join. This is for two reasons. The first is that demo_16 does not include Alaska. This results in the dropping of 70 or so rows. The second reason is there are rows in demo_16 that don’t appear in health_16 as well. Doing an inner join ensures only the common rows are kept.</p>
+<pre class="r"><code># join the datasets
+data &lt;- health_16 %&gt;% inner_join(demo_16, by = c(&quot;fips&quot;, 
+    &quot;state&quot;, &quot;county&quot;))
+data %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 3,069
+## Variables: 14
+## $ fips       &lt;dbl&gt; 1001, 1003, 1005, 1007, 1009, 1011, 1013, 1015, 1017, 10...
+## $ state      &lt;chr&gt; &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;Alabama&quot;, &quot;...
+## $ county     &lt;chr&gt; &quot;Autauga&quot;, &quot;Baldwin&quot;, &quot;Barbour&quot;, &quot;Bibb&quot;, &quot;Blount&quot;, &quot;Bull...
+## $ quality_r  &lt;chr&gt; &quot;6&quot;, &quot;2&quot;, &quot;46&quot;, &quot;41&quot;, &quot;7&quot;, &quot;56&quot;, &quot;52&quot;, &quot;29&quot;, &quot;50&quot;, &quot;15&quot;,...
+## $ quality_q  &lt;chr&gt; &quot;1&quot;, &quot;1&quot;, &quot;3&quot;, &quot;3&quot;, &quot;1&quot;, &quot;4&quot;, &quot;4&quot;, &quot;2&quot;, &quot;3&quot;, &quot;1&quot;, &quot;2&quot;, &quot;...
+## $ ses_r      &lt;chr&gt; &quot;4&quot;, &quot;5&quot;, &quot;56&quot;, &quot;25&quot;, &quot;13&quot;, &quot;62&quot;, &quot;58&quot;, &quot;31&quot;, &quot;40&quot;, &quot;22&quot;...
+## $ ses_q      &lt;chr&gt; &quot;1&quot;, &quot;1&quot;, &quot;4&quot;, &quot;2&quot;, &quot;1&quot;, &quot;4&quot;, &quot;4&quot;, &quot;2&quot;, &quot;3&quot;, &quot;2&quot;, &quot;2&quot;, &quot;...
+## $ cvap       &lt;dbl&gt; 40690, 151770, 20375, 17590, 42430, 8195, 15425, 88525, ...
+## $ pct_29     &lt;dbl&gt; 40.03706, 35.47441, 37.66439, 37.32943, 37.24005, 37.935...
+## $ pct_65     &lt;dbl&gt; 13.97846, 18.71485, 16.52889, 14.88570, 17.19292, 15.134...
+## $ pct_rural  &lt;dbl&gt; 42.00216, 42.27910, 67.78963, 68.35261, 89.95150, 51.374...
+## $ rep_pres   &lt;dbl&gt; 18172, 72883, 5454, 6738, 22859, 1140, 4901, 32865, 7843...
+## $ dem_pres   &lt;dbl&gt; 5936, 18458, 4871, 1874, 2156, 3530, 3726, 13242, 5784, ...
+## $ other_pres &lt;dbl&gt; 865, 3874, 144, 207, 573, 40, 105, 1757, 273, 233, 377, ...</code></pre>
+</div>
+</div>
+<div id="summary-statistics" class="section level1">
+<h1>Summary Statistics</h1>
+<div id="ungrouped-statistics" class="section level3">
+<h3>Ungrouped Statistics</h3>
+<p>The following tables are some descriptive statistics for the entire nation. The dataset is organized by county, so a table of means would show the average for every county in the country. Notably, none of the variables relating to quality of life or SES are included in these summaries. Those variables are rankings and quartiles, not actual raw data. It would be rather uninteresting to take the standard deviation of the quality of life rankings, as they are going to equal 1. These variables will be left for later analysis.</p>
+<pre class="r"><code>data &lt;- data %&gt;% group_by(county) %&gt;% mutate(total_votes = rep_pres + 
+    dem_pres + other_pres)
+# national votes
+data %&gt;% ungroup() %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;rep_pres&quot;, 
+    &quot;dem_pres&quot;, &quot;other_pres&quot;, &quot;total_votes&quot;), sum, na.rm = T) %&gt;% 
+    mutate(turnout = round((total_votes/cvap) * 100)) %&gt;% 
+    kable(booktabs = T, col.names = c(&quot;Voting Age Population&quot;, 
+        &quot;Votes for Trump&quot;, &quot;Votes for Clinton&quot;, &quot;Votes for 3rd Party&quot;, 
+        &quot;Total Votes&quot;, &quot;% Turnout&quot;), caption = &quot;2016 National Voting Stats&quot;) %&gt;% 
+    kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, 
+        &quot;condensed&quot;, &quot;responsive&quot;), full_width = F) %&gt;% 
+    column_spec(1, width = &quot;3.5cm&quot;)</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-5">Table 1: </span>2016 National Voting Stats
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Voting Age Population
+</th>
+<th style="text-align:right;">
+Votes for Trump
+</th>
+<th style="text-align:right;">
+Votes for Clinton
+</th>
+<th style="text-align:right;">
+Votes for 3rd Party
+</th>
+<th style="text-align:right;">
+Total Votes
+</th>
+<th style="text-align:right;">
+% Turnout
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;width: 3.5cm; ">
+221238570
+</td>
+<td style="text-align:right;">
+62127981
+</td>
+<td style="text-align:right;">
+64629065
+</td>
+<td style="text-align:right;">
+7547036
+</td>
+<td style="text-align:right;">
+134304082
+</td>
+<td style="text-align:right;">
+61
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># national mean
+data %&gt;% ungroup() %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), mean, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;Mean Voting Age Population (VAP)&quot;, &quot;Mean % of VAP under 29&quot;, 
+        &quot;Mean % of VAP over 65&quot;, &quot;Mean % of VAP in Rural Areas &quot;), 
+    caption = &quot;2016 National County Population Means&quot;) %&gt;% 
+    kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, 
+        &quot;condensed&quot;, &quot;responsive&quot;), full_width = F)</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-5">Table 1: </span>2016 National County Population Means
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Mean Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+Mean % of VAP under 29
+</th>
+<th style="text-align:right;">
+Mean % of VAP over 65
+</th>
+<th style="text-align:right;">
+Mean % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+72111.66
+</td>
+<td style="text-align:right;">
+37.27824
+</td>
+<td style="text-align:right;">
+17.66933
+</td>
+<td style="text-align:right;">
+59.20335
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># national median
+data %&gt;% ungroup() %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), median, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;Median Voting Age Population (VAP)&quot;, 
+        &quot;Median % of VAP under 29&quot;, &quot;Median % of VAP over 65&quot;, 
+        &quot;Median % of VAP in Rural Areas &quot;), caption = &quot;2016 National County Population Medians&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-5">Table 1: </span>2016 National County Population Medians
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Median Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+Median % of VAP under 29
+</th>
+<th style="text-align:right;">
+Median % of VAP over 65
+</th>
+<th style="text-align:right;">
+Median % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+19672.5
+</td>
+<td style="text-align:right;">
+36.97924
+</td>
+<td style="text-align:right;">
+17.30258
+</td>
+<td style="text-align:right;">
+60.06388
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># national sd
+data %&gt;% ungroup() %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), sd, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;SD Voting Age Population (VAP)&quot;, &quot;SD % of VAP under 29&quot;, 
+        &quot;SD % of VAP over 65&quot;, &quot;SD % of VAP in Rural Areas &quot;), 
+    caption = &quot;2016 National County Population Standard Deviations&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-5">Table 1: </span>2016 National County Population Standard Deviations
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+SD Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+SD % of VAP under 29
+</th>
+<th style="text-align:right;">
+SD % of VAP over 65
+</th>
+<th style="text-align:right;">
+SD % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+212004.9
+</td>
+<td style="text-align:right;">
+5.36754
+</td>
+<td style="text-align:right;">
+4.435624
+</td>
+<td style="text-align:right;">
+31.00226
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># national variance
+data %&gt;% ungroup() %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), var, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;Var of Voting Age Population (VAP)&quot;, 
+        &quot;Var of % of VAP under 29&quot;, &quot;Var of % of VAP over 65&quot;, 
+        &quot;Var of % of VAP in Rural Areas &quot;), caption = &quot;2016 National County Population Variances&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-5">Table 1: </span>2016 National County Population Variances
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Var of Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+Var of % of VAP under 29
+</th>
+<th style="text-align:right;">
+Var of % of VAP over 65
+</th>
+<th style="text-align:right;">
+Var of % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+44946092630
+</td>
+<td style="text-align:right;">
+28.81049
+</td>
+<td style="text-align:right;">
+19.67476
+</td>
+<td style="text-align:right;">
+961.1404
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="state-statistics" class="section level3">
+<h3>State Statistics</h3>
+<p>Grouping the data by state gives another level of detail and allows for more interesting analysis.</p>
+<pre class="r"><code># state total votes
+data %&gt;% group_by(state) %&gt;% summarize_at(c(&quot;cvap&quot;, &quot;rep_pres&quot;, 
+    &quot;dem_pres&quot;, &quot;other_pres&quot;, &quot;total_votes&quot;), sum) %&gt;% mutate(turnout = round((total_votes/cvap) * 
+    100)) %&gt;% mutate(winner_pres = ifelse(rep_pres &gt; dem_pres, 
+    &quot;Trump&quot;, &quot;Clinton&quot;)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
+    col.names = c(&quot;State&quot;, &quot;Voting Age Population&quot;, &quot;Votes for Trump&quot;, 
+        &quot;Votes for Clinton&quot;, &quot;Votes for 3rd Party&quot;, &quot;Total Votes&quot;, 
+        &quot;% Turnout&quot;, &quot;Winner&quot;), caption = &quot;2016 State Voting Stats&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    width = &quot;3.5cm&quot;)</code></pre>
+
+<pre class="r"><code># state mean
+data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), mean, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
+    booktabs = T, col.names = c(&quot;State&quot;, &quot;Mean Voting Age Population (VAP)&quot;, 
+        &quot;Mean % of VAP under 29&quot;, &quot;Mean % of VAP over 65&quot;, 
+        &quot;Mean % of VAP in Rural Areas &quot;), caption = &quot;2016 County Population Means by State&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    width = &quot;3.5cm&quot;)</code></pre>
+
+<pre class="r"><code># state median
+data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), median, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
+    booktabs = T, col.names = c(&quot;State&quot;, &quot;Median Voting Age Population (VAP)&quot;, 
+        &quot;Median % of VAP under 29&quot;, &quot;Median % of VAP over 65&quot;, 
+        &quot;Median % of VAP in Rural Areas &quot;), caption = &quot;2016 County Population Medians by State&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    width = &quot;3.5cm&quot;)</code></pre>
+
+<pre class="r"><code># state sd
+data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), sd, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
+    booktabs = T, col.names = c(&quot;State&quot;, &quot;SD Voting Age Population (VAP)&quot;, 
+        &quot;SD % of VAP under 29&quot;, &quot;SD % of VAP over 65&quot;, &quot;SD % of VAP in Rural Areas &quot;), 
+    caption = &quot;2016 County Population Standard Deviations by State&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    width = &quot;3.5cm&quot;)</code></pre>
+
+<pre class="r"><code># state var
+data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), var, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
+    booktabs = T, col.names = c(&quot;State&quot;, &quot;Var of Voting Age Population (VAP)&quot;, 
+        &quot;Var of % of VAP under 29&quot;, &quot;Var of % of VAP over 65&quot;, 
+        &quot;Var of % of VAP in Rural Areas &quot;), caption = &quot;2016 County Population Variances by State&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    width = &quot;3.5cm&quot;)</code></pre>
+
+</div>
+<div id="integrating-health-data" class="section level3">
+<h3>Integrating Health Data</h3>
+<p>Up till now, the health data hasn’t really been touched. It’s not really the type of data that would benefit from simply examining means or standard deviations. Now that the voting data have been covered, we can start using the two datasets together.</p>
+<p>This first tables were meant to explore the relationship between county quality and county voting preference. However, it wasn’t particularly enlightening. What it really ends up showing is just how many more republican voting counties there are than democrat voting counties.</p>
+<pre class="r"><code>data %&gt;% group_by(quality_q) %&gt;% arrange(quality_q) %&gt;% 
+    filter(quality_q != &quot;NR&quot; &amp; quality_q != &quot;5&quot;) %&gt;% mutate(winner_pres = ifelse(rep_pres &gt; 
+    dem_pres, &quot;Republican&quot;, &quot;Democrat&quot;)) %&gt;% summarise(rep_counties = sum(winner_pres == 
+    &quot;Republican&quot;, na.rm = T), dem_counties = sum(winner_pres == 
+    &quot;Democrat&quot;, na.rm = T), pct_rep = round((rep_counties/(rep_counties + 
+    dem_counties)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
+    col.names = c(&quot;QoL Life Quartile&quot;, &quot;Republican Voting Counties&quot;, 
+        &quot;Democrat Voting Counties&quot;, &quot;Percentage of Quartile Voting Republican&quot;), 
+    caption = &quot;2016 County Quality of Life Quartiles and Voting Preferences&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 10, latex_options = &quot;hold_position&quot;)</code></pre>
+
+<pre class="r"><code>data %&gt;% group_by(ses_q) %&gt;% arrange(ses_q) %&gt;% filter(ses_q != 
+    &quot;NR&quot; &amp; ses_q != &quot;5&quot;) %&gt;% mutate(winner_pres = ifelse(rep_pres &gt; 
+    dem_pres, &quot;Republican&quot;, &quot;Democrat&quot;)) %&gt;% summarise(rep_counties = sum(winner_pres == 
+    &quot;Republican&quot;, na.rm = T), dem_counties = sum(winner_pres == 
+    &quot;Democrat&quot;, na.rm = T), pct_rep = round((rep_counties/(rep_counties + 
+    dem_counties)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
+    col.names = c(&quot;SES of Life Quartile&quot;, &quot;Republican Voting Counties&quot;, 
+        &quot;Democrat Voting Counties&quot;, &quot;Percentage of Quartile Voting Republican&quot;), 
+    caption = &quot;2016 County SES Quartiles and Voting Preferences&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 10, latex_options = &quot;hold_position&quot;)</code></pre>
+
+<p>To find something more interesting, we can use population instead of the number of counties. This is essentially the same data, but each county’s population will be added to the total.</p>
+<pre class="r"><code>data %&gt;% group_by(quality_q) %&gt;% arrange(quality_q) %&gt;% 
+    filter(quality_q != &quot;NR&quot; &amp; quality_q != &quot;5&quot;) %&gt;% summarise(rep_voters = sum(rep_pres, 
+    na.rm = T), dem_voters = sum(dem_pres, na.rm = T), pct_rep = round((rep_voters/(rep_voters + 
+    dem_voters)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
+    col.names = c(&quot;QoL Quartile&quot;, &quot;Republican Voters&quot;, &quot;Democrat Voters&quot;, 
+        &quot;Percentage of Quartile Voting Republican&quot;), caption = &quot;2016 County Quality of Life Quartiles and Voter Populations&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 10, latex_options = &quot;HOLD_position&quot;)</code></pre>
+
+<pre class="r"><code>data %&gt;% group_by(ses_q) %&gt;% arrange(ses_q) %&gt;% filter(ses_q != 
+    &quot;NR&quot; &amp; ses_q != &quot;5&quot;) %&gt;% summarise(rep_voters = sum(rep_pres, 
+    na.rm = T), dem_voters = sum(dem_pres, na.rm = T), pct_rep = round((rep_voters/(rep_voters + 
+    dem_voters)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
+    col.names = c(&quot;SES Quartile&quot;, &quot;Republican Voters&quot;, &quot;Democrat Voters&quot;, 
+        &quot;Percentage of Quartile Voting Republican&quot;), caption = &quot;2016 County SES Quartiles and Voter Populations&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 10, latex_options = &quot;HOLD_position&quot;)</code></pre>
+
+<p>Another way for us to assess relationships is by using a correlation matrix. The choice of variables was quality of life, SES, %29, %65, %rural, and the voting data. Keep in mind that a negative correlation with SES or Quality of Life indicates an INCREASE in that metric, as in this dataset quartile 1 is considered the top quartile.</p>
+<pre class="r"><code># convert dataframe to numeric
+data$ses_r &lt;- as.numeric(data$ses_r)
+data$ses_q &lt;- as.numeric(data$ses_q)
+data$quality_r &lt;- as.numeric(data$quality_r)
+data$quality_q &lt;- as.numeric(data$quality_q)
+
+corr &lt;- data %&gt;% ungroup() %&gt;% mutate(pct_rep = round((rep_pres/total_votes) * 
+    100)) %&gt;% select(quality_q, ses_q, pct_29, pct_65, pct_rural, 
+    pct_rep) %&gt;% rename(`QoL Quartile` = quality_q, `SES Quartile` = ses_q, 
+    `Percent 29 and Under` = pct_29, `Percent 65 and Over` = pct_65, 
+    `Percent Rural` = pct_rural, `Percent Republican` = pct_rep) %&gt;% 
+    as.matrix() %&gt;% cor(use = &quot;complete.obs&quot;) %&gt;% round(2)
+
+corr %&gt;% kable(&quot;latex&quot;, booktabs = T, caption = &quot;2016 National Correlation Matrix&quot;, 
+    row.names = T) %&gt;% kable_styling(full_width = T, font_size = 10, 
+    latex_options = &quot;hold_position&quot;) %&gt;% column_spec(1, 
+    width = &quot;3.5cm&quot;)</code></pre>
+
+<p>To effectively use the SES and Life Quality rankings variable, we need to focus on a specific state (because the rankings are within each state).This is a correlation matrix using Texas and its ranking data. For the most part, this correlation matrix observes the same trends as the national, but it did introduce a new correlation in which %republican is negatively correlated withh both Life Quality and SES, suggesting that “healthier” counties are more likely to vote republican.</p>
+<pre class="r"><code>corr2 &lt;- data %&gt;% ungroup() %&gt;% filter(state == &quot;Texas&quot;) %&gt;% 
+    mutate(pct_rep = round((rep_pres/total_votes) * 100)) %&gt;% 
+    select(quality_r, ses_r, pct_29, pct_65, pct_rural, 
+        pct_rep) %&gt;% rename(`Quality Rank` = quality_r, 
+    `SES Rank` = ses_r, `Percent 29 and Under` = pct_29, 
+    `Percent 65 and Over` = pct_65, `Percent Rural` = pct_rural, 
+    `Percent Republican` = pct_rep) %&gt;% as.matrix() %&gt;% 
+    cor(use = &quot;complete.obs&quot;) %&gt;% round(2)
+
+corr2 %&gt;% kable(&quot;latex&quot;, booktabs = T, caption = &quot;2016 Texas Correlation Matrix&quot;, 
+    row.names = T) %&gt;% kable_styling(full_width = T, font_size = 10, 
+    latex_options = &quot;HOLD_position&quot;) %&gt;% column_spec(1, 
+    width = &quot;3.5cm&quot;)</code></pre>
+
+</div>
+</div>
+<div id="visualizations" class="section level1">
+<h1>Visualizations</h1>
+<p>Now that we have explored some of our data, we can create some visualizations, starting with the national correlation matrix. The plot of choice is a heatmap, in which redder colors are stronger positive correlations, and bluer colors are stronger negative correlations. The actual coefficients are within their respective boxes. There are a few obvious correlations: SES and Quality of Life are strongly positively correlated, %29 is obviously negatively correlated with %65. Interestingly, %29 and %rural have a medium negative correlation, while %65 and %rural have a nearly identical in magnitude positive correlation. Similarly, %29 shows a weak negative correlation with %republican and %65 shows a weak positive correlation with %republican. Finally, %rural has a medium positive correlation with %republican.</p>
+<pre class="r"><code># remove upper values of matrix
+corr3 &lt;- corr
+corr3[upper.tri(corr3)] &lt;- NA
+corr3 &lt;- melt(corr3, na.rm = T)
+
+# draw heatmap
+ggplot(corr3, aes(Var1, Var2)) + geom_tile(aes(fill = value), 
+    color = &quot;black&quot;) + scale_fill_gradient2(low = &quot;blue&quot;, 
+    high = &quot;red&quot;, mid = &quot;white&quot;, midpoint = 0, limit = c(-1, 
+        1), name = &quot;Correlation&quot;) + ggtitle(&quot;Figure 1: 2016 National Correlation Heatmap&quot;) + 
+    coord_fixed() + geom_text(aes(Var1, Var2, label = value), 
+    size = 3) + theme(axis.text.x = element_text(angle = 45, 
+    vjust = 1, hjust = 1), axis.title = element_blank(), 
+    panel.grid.major.y = element_line(color = &quot;grey90&quot;), 
+    panel.background = element_blank(), axis.ticks = element_blank(), 
+    legend.justification = c(0, 0.5)) + guides(fill = guide_colorbar(barwidth = 1.2, 
+    barheight = 10, title.hjust = 0.5, title.vjust = 0.5, 
+    ticks = F))</code></pre>
+<p><img src="/Project1_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>This next graph shows a linear model for the percent of a county voting republican against the percent living in a rural area, across the county’s SES quartile. This data shows very clearly that as rurality increases, so does the percent of a county voting republican. There isn’t any particularly strong interaction effects with SES quartile, but it is interesting that the 4th quartile shows a markedly lower chance of voting for a republican candidate, across all levels of rurality.</p>
+<pre class="r"><code>data &lt;- data %&gt;% mutate(pct_rep = round(((rep_pres)/(total_votes)) * 
+    100))
+
+data %&gt;% filter(ses_q != 5) %&gt;% ggplot(aes(pct_rural, pct_rep, 
+    color = as.factor(ses_q))) + scale_color_discrete(name = &quot;SES quartile&quot;) + 
+    coord_cartesian(ylim = c(45, 80)) + geom_smooth(method = lm, 
+    se = F) + labs(y = &quot;Percent voting republican&quot;, title = &quot;Figure 2: 2016 percent voting republican against percent\nliving in rural area across SES quartile&quot;, 
+    x = &quot;Percent living in rural area&quot;) + theme_minimal() + 
+    theme(legend.justification = c(0, 0.5), plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="/Project1_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The third and final visualization is a visual representation of Table 6, which contains voting stats by state. This graph doesn’t really explain any trends, but it does clearly display the voting results for each state, showing both the number of votes and the winner of each state.It also demonstrates how incredibly varied the population counts between states is.</p>
+<pre class="r"><code>data %&gt;% pivot_longer(c(&quot;dem_pres&quot;, &quot;rep_pres&quot;), names_to = &quot;president&quot;, 
+    values_to = &quot;pres_votes&quot;) %&gt;% group_by(state, president) %&gt;% 
+    select(state, president, pres_votes) %&gt;% summarize_at(&quot;pres_votes&quot;, 
+    sum) %&gt;% arrange(desc(state)) %&gt;% ggplot(aes(x = fct_rev(state), 
+    pres_votes, fill = president)) + scale_fill_manual(values = c(&quot;#70c1ff&quot;, 
+    &quot;#ff8170&quot;), name = &quot;Party&quot;, labels = c(&quot;Democratic&quot;, 
+    &quot;Republican&quot;)) + geom_bar(stat = &quot;summary&quot;, width = 0.8, 
+    position = position_dodge(0.8)) + coord_flip() + labs(title = &quot;Figure 3: 2016 democratic and republican votes recorded by each state&quot;, 
+    y = &quot;Votes Recorded&quot;, x = &quot;State&quot;) + scale_y_continuous(labels = c(&quot;0&quot;, 
+    &quot;500,000&quot;, &quot;1,000,000&quot;, &quot;1,500,000&quot;, &quot;2,000,000&quot;, &quot;2,500,000&quot;, 
+    &quot;3,000,000&quot;, &quot;3,500,000&quot;, &quot;4,000,000&quot;, &quot;4,500,000&quot;, 
+    &quot;5,000,000&quot;, &quot;5,500,000&quot;, &quot;6,000,000&quot;, &quot;6,500,000&quot;, 
+    &quot;7,000,000&quot;, &quot;7,500,000&quot;, &quot;8,000,000&quot;, &quot;8,500,000&quot;, 
+    &quot;9,000,000&quot;), limits = c(0, 9e+06), breaks = c(0, 5e+05, 
+    1e+06, 1500000, 2e+06, 2500000, 3e+06, 3500000, 4e+06, 
+    4500000, 5e+06, 5500000, 6e+06, 6500000, 7e+06, 7500000, 
+    8e+06, 8500000, 9e+06)) + theme_minimal() + theme(legend.justification = c(0, 
+    0.5), axis.text.x = element_text(angle = 45, vjust = 1, 
+    hjust = 1), plot.title = element_text(hjust = 0.5), 
+    text = element_text(size = 15), panel.grid.major = element_line(color = &quot;grey70&quot;))</code></pre>
+<p><img src="/Project1_files/figure-html/unnamed-chunk-13-1.png" width="960" style="display: block; margin: auto;" />
+# PAM Clustering
+Now we will do PAM clustering with our data. This will attempt to split the data into two separate clusters, as determined by distance between observations. This distance is found using Gowers dissimilarity. Clustering works by picking random points as your clusters and dsitributing your data points to two clusters based on thir similarity to the random points. You then calculate a new mean of the points in each group, and repeat the clustering based on distance. This repeats until the clusters stabilize, and each data point remains in the same group. All of this takes place within the pam() function.</p>
+<p>The first thing we will do is determine the optimal number of clusters for the data. This is done by finding the highest average silhouette width for a variety of k, or number of clusters. As the graph demonstrates, the highest silhouette width occurs when k = 2, so we will use 2 clusters for our PAM clustering.</p>
+<pre class="r"><code>pam_data &lt;- data %&gt;% ungroup %&gt;% select(quality_q, ses_q, 
+    pct_29, pct_65, pct_rural, pct_rep) %&gt;% filter(ses_q != 
+    5) %&gt;% na.omit()
+
+# get number of clusters
+sil_width &lt;- vector()
+for (i in 2:10) {
+    pam_fit &lt;- pam_data %&gt;% daisy(&quot;gower&quot;) %&gt;% pam(gower1, 
+        k = i, diss = T)
+    sil_width[i] &lt;- pam_fit$silinfo$avg.width
+}
+ggplot() + geom_line(aes(x = 2:10, y = sil_width[2:10])) + 
+    scale_x_continuous(name = &quot;k&quot;, breaks = 2:10) + labs(title = &quot;Figure 4: 2016 national county clusters: average silhouette width vs k&quot;, 
+    y = &quot;Average silhouette width&quot;) + theme_minimal() + 
+    theme(plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="/Project1_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Next, we can visualize the silhouette widths and find the average. This graph presents both groups and their silhouettes widths. The average width is reported as 0.34, which is fairly weak clustering and indicates that any observed clustering could be completely artificial.</p>
+<pre class="r"><code># make cluster based on previous results
+pam_clust &lt;- pam_data %&gt;% daisy(&quot;gower&quot;) %&gt;% pam(gower1, 
+    k = 2, diss = T)
+
+# check silhouette width
+pam_clust$silinfo$widths %&gt;% as.data.frame %&gt;% mutate(x = 3005:1) %&gt;% 
+    ggplot(aes(x, y = sil_width, fill = as.factor(cluster))) + 
+    geom_bar(stat = &quot;identity&quot;) + facet_grid(cluster ~ ., 
+    scales = &quot;free_y&quot;) + scale_fill_discrete(name = &quot;Cluster&quot;) + 
+    coord_flip() + labs(y = &quot;Silhouette Width&quot;, title = &quot;Figure 5: 2016 national county PAM clustering silhouette widths&quot;, 
+    subtitle = paste(&quot;Average silhouette width = &quot;, round(pam_clust$silinfo$avg.width, 
+        2))) + theme(axis.title.y = element_blank(), plot.title = element_text(hjust = 0.5), 
+    plot.subtitle = element_text(hjust = 0.5))</code></pre>
+<p><img src="/Project1_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>One way of determining along what variables the PMA clustering has clustered the data is by looking at the median values for each cluster. Examining these medians, it’s evident that no clustering has occured based on %29, %65, or %republican, as all those values are very similar. The SES and QoL quartiles and the %rural are all potential causes of clustering.</p>
+<pre class="r"><code>pam_data %&gt;% mutate(Cluster = as.factor(pam_clust$clustering)) %&gt;% 
+    slice(pam_clust$id.med) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
+    col.names = c(&quot;QoL quartile&quot;, &quot;SES quartile&quot;, &quot; % 29 and under&quot;, 
+        &quot;% 65 and older&quot;, &quot;% rural&quot;, &quot;% republican&quot;, &quot;Cluster&quot;), 
+    caption = &quot;2016 national county PAM clustering medians&quot;) %&gt;% 
+    kable_styling(full_width = T, font_size = 10, latex_options = &quot;HOLD_position&quot;)</code></pre>
+
+<p>This final figure contains all the correlation values and clustering values for each of the variable points. Looking at the grapphs of distribution (the line from the top left to the bottom right corner), it’s clear that both the SES and QoL quartile were almost totally separated into two clusters (4 and 3, 2 and 1). Looking at the crossing between SES and QoL, it becomes aparent that the basis for the separation of the groups was primarily by these metrics, in which indiviuals with an SES of 4 are separate from individuals with an SES of 3, 2, and 1 (nearly the same separation exists for QoL, due to its high correlation with SES).</p>
+<pre class="r"><code>pam_data %&gt;% rename(`QoL quartile` = quality_q, `SES quartile` = ses_q, 
+    `% 29 and under` = pct_29, `% 65 and over` = pct_65, 
+    `% Rural` = pct_rural, `% Republican` = pct_rep) %&gt;% 
+    mutate(cluster = as.factor(pam_clust$clustering)) %&gt;% 
+    ggpairs(columns = 1:6, aes(color = cluster)) + theme_minimal() + 
+    theme(plot.title = element_text(hjust = 0.5)) + labs(title = &quot;Figure 6: 2016 national county PAM clusters&quot;)</code></pre>
+<p><img src="/Project1_files/figure-html/unnamed-chunk-17-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>

@@ -1,0 +1,549 @@
+---
+title: 'Project 2: Modeling, Testing, and Predicting'
+author: "SDS348"
+date: ''
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+---
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Before the data can be used, it has to be cleaned and joined together.This results in a 2297 row by 31 column sheet, containing every players season stats for the 2015-16 to the 2018-19 season, as well as whether or not they placed into All NBA. The dataset is trimmed to only contain “starters”, or players with at least 41 games started in the season (half total games). This reduces the set to 547 observations of players who could potentially earn All NBA. Not restricting observations to this population allows for players with nearly 0 minutes a game to greatly affect the analysis.</p>
+<p>The sheer number of stats available is too much, so it first will be reduced to the variables player, allNBA team, age, games started, points, total rebounds, assists, steals, blocks, turnovers, conference, and true shooting percentage. Teams are converted into conference (East and West), as having 30 groups for a categorical variable is far too many. True shooting percentage is calculated by points/(2 * (Field goals attempted + 0.44 * free throws attempted)). This measure accounts for free throws, which are real points, when measuring player efficiency, as well as the difference in value of a 3pt and 2pt shot.</p>
+<pre class="r"><code>#Create conference variable
+east &lt;- c(&quot;MIL&quot;, &quot;TOR&quot;, &quot;BOS&quot;, &quot;ATL&quot;, &quot;BRK&quot;, &quot;CHI&quot;, 
+          &quot;CHO&quot;, &quot;CLE&quot;, &quot;DET&quot;, &quot;IND&quot;, &quot;MIA&quot;, 
+          &quot;NYK&quot;, &quot;ORL&quot;, &quot;PHI&quot;, &quot;WAS&quot;)
+data &lt;- data %&gt;% mutate(Conf = ifelse(Tm %in% east, &quot;east&quot;, &quot;west&quot;))
+
+#Create TS variable
+data &lt;- data %&gt;% mutate(TS = PTS/(2 * (FGA + 0.44*FTA)))
+
+#Select wanted variables 
+work &lt;- data %&gt;% select(Player, All, Conf, Age, GS, PTS, TS, TRB, AST, STL, BLK, TOV)</code></pre>
+</div>
+<div id="manova" class="section level1">
+<h1>MANOVA</h1>
+<p>The first model is a MANOVA. The categorical variable of All NBA Team is tested with every numeric variable: Age, games started(GS), points(PTS), true shooting(TS%), total rebounds(TRB), assists (AST), steals (STL), blocks (BLK), and turnovers (TOV).</p>
+<pre class="r"><code>man &lt;- manova(cbind(Age,GS,PTS,TS,TRB,AST,STL,BLK,TOV) ~ All, data = work)
+
+summary(man)</code></pre>
+<pre><code>## Df Pillai approx F num Df den Df Pr(&gt;F)
+## All 3 0.4266 9.8911 27 1611 &lt; 2.2e-16 ***
+## Residuals 543
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<p>There is most definitely significance in this model, so it’s worth performing individual anovas on each variable.</p>
+<pre class="r"><code>summary(aov(man))</code></pre>
+<pre><code>## Response Age :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 20.3 6.7549 0.4074 0.7477
+## Residuals 543 9003.4 16.5808
+##
+## Response GS :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 4543 1514.40 10.61 8.672e-07 ***
+## Residuals 543 77508 142.74
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response PTS :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 5865.7 1955.23 84.181 &lt; 2.2e-16 ***
+## Residuals 543 12612.0 23.23
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response TS :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 0.09144 0.0304802 18.443 2.087e-11 ***
+## Residuals 543 0.89741 0.0016527
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response TRB :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 307.6 102.538 14.49 4.307e-09 ***
+## Residuals 543 3842.6 7.077
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response AST :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 369.68 123.227 28.369 &lt; 2.2e-16 ***
+## Residuals 543 2358.68 4.344
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response STL :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 11.232 3.7441 23.629 2.185e-14 ***
+## Residuals 543 86.042 0.1585
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response BLK :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 5.372 1.79065 6.3411 0.0003131 ***
+## Residuals 543 153.336 0.28239
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response TOV :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## All 3 86.522 28.8406 51.007 &lt; 2.2e-16 ***
+## Residuals 543 307.024 0.5654
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<p>Rather unsurprisingly, the majority of the variables did show a mean difference across All NBA teams. This is to be expected, as a player in an All NBA team is one of the 15 best players of the year, compared to 150 starters, and All NBA players most certainly have higher averages for stats like PTS and REBS than a standard starter. Additionally, not all starters play the same minutes. Some play as few as 25, the better ones play upwards of 35.</p>
+<p>Age was the only statistic to not have mean differences across the All NBA teams.</p>
+<pre class="r"><code>1 - .95^61</code></pre>
+<pre><code>## [1] 0.9562337</code></pre>
+<pre class="r"><code>0.05/61</code></pre>
+<pre><code>## [1] 0.0008196721</code></pre>
+<p>One MANOVA, 10 ANOVAs, and 60 t-tests were performed, for a total of 61 tests. This means the probability of a Type I error was 0.956. To correct the number back to 0.05, a Bonferroni adjusted significance level of 0.00082 is necessary.</p>
+<pre class="r"><code>pairwise.t.test(work$GS, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$GS and work$All 
+## 
+##      1st     2nd     3rd    
+## 2nd  0.52554 -       -      
+## 3rd  0.72099 0.78118 -      
+## none 0.00015 0.00342 0.00094
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(work$PTS, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$PTS and work$All 
+## 
+##      1st     2nd     3rd    
+## 2nd  0.09486 -       -      
+## 3rd  0.00079 0.08919 -      
+## none &lt; 2e-16 &lt; 2e-16 9.5e-12
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(work$TS, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$TS and work$All 
+## 
+##      1st     2nd     3rd   
+## 2nd  0.2493  -       -     
+## 3rd  0.0302  0.3081  -     
+## none 1.1e-08 3.1e-05 0.0055
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(work$TRB, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$TRB and work$All 
+## 
+##      1st     2nd     3rd    
+## 2nd  0.50969 -       -      
+## 3rd  0.47968 0.96209 -      
+## none 6.4e-06 0.00030 0.00038
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(work$AST, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$AST and work$All 
+## 
+##      1st     2nd     3rd   
+## 2nd  0.1925  -       -     
+## 3rd  0.0266  0.3591  -     
+## none 7.7e-12 3.0e-07 0.0001
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(work$STL, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$STL and work$All 
+## 
+##      1st     2nd    3rd    
+## 2nd  0.0265  -      -      
+## 3rd  0.6914  0.0682 -      
+## none 2.6e-09 0.0031 5.7e-08
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(work$BLK, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$BLK and work$All 
+## 
+##      1st     2nd     3rd    
+## 2nd  0.65555 -       -      
+## 3rd  0.34145 0.16255 -      
+## none 0.00704 0.00095 0.16652
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>pairwise.t.test(work$TOV, work$All, p.adj = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  work$TOV and work$All 
+## 
+##      1st     2nd     3rd    
+## 2nd  0.04626 -       -      
+## 3rd  0.00088 0.17895 -      
+## none &lt; 2e-16 2.2e-11 8.9e-07
+## 
+## P value adjustment method: none</code></pre>
+<p>Post-hoc t-tests were performed on every variable significantly affected by All NBA status. All of these comparisons were done with the Bonferroni adjusted p-value (0.00082).</p>
+<p>For GS, there was a statistically significant difference between the 1st team and non All NBA players.</p>
+<p>For PTS, there were significant differences between non All NBA and all 3 All NBA teams, and a significant difference between the 1st and 3rd team.</p>
+<p>For TS%, there were significant differences between non All NBA and both the 1st and 2nd teams.</p>
+<p>For TRB, there were significant differences betweeen non All NBA and all three All NBA teams.</p>
+<p>For AST, there were significant differences betweeen non All NBA and all three All NBA teams.</p>
+<p>For STL, there were significant differences between non All NBA and both the 1st and 3rd teams.</p>
+<p>For BLK, there were no significant differences.</p>
+<p>For TOV, there were significant differences betweeen non All NBA and all three All NBA teams.</p>
+<pre class="r"><code>covmats &lt;- work %&gt;% group_by(All) %&gt;% do(covs = round(cov(.[4:12]), digits = 2))
+for(i in 1:4){
+  print(as.character(covmats$All[i])); print(covmats$covs[i])
+}</code></pre>
+<pre><code>## [1] &quot;1st&quot;
+## [[1]]
+## Age GS PTS TS TRB AST STL BLK TOV
+## Age 8.33 0.82 3.22 0.01 -2.73 3.96 -0.12 -0.81 1.43
+## GS 0.82 16.41 1.00 -0.05 3.02 5.68 0.62 -0.80 2.30
+## PTS 3.22 1.00 22.85 0.00 -4.95 6.07 0.91 -1.11 3.65
+## TS 0.01 -0.05 0.00 0.00 -0.02 -0.02 0.00 0.00 -0.01
+## TRB -2.73 3.02 -4.95 -0.02 7.11 -2.07 -0.40 1.25 -0.39
+## AST 3.96 5.68 6.07 -0.02 -2.07 8.87 0.28 -1.44 3.33
+## STL -0.12 0.62 0.91 0.00 -0.40 0.28 0.17 -0.16 0.13
+## BLK -0.81 -0.80 -1.11 0.00 1.25 -1.44 -0.16 0.53 -0.44
+## TOV 1.43 2.30 3.65 -0.01 -0.39 3.33 0.13 -0.44 1.48
+##
+## [1] &quot;2nd&quot;
+## [[1]]
+## Age GS PTS TS TRB AST STL BLK TOV
+## Age 7.10 2.96 1.28 -0.01 -4.04 1.85 0.07 -1.08 -0.55
+## GS 2.96 51.40 -11.11 0.00 -6.13 6.08 0.10 -0.77 -0.07
+## PTS 1.28 -11.11 16.59 -0.02 -2.74 0.06 -0.04 -1.04 0.90
+## TS -0.01 0.00 -0.02 0.00 0.01 -0.03 -0.01 0.01 -0.01
+## TRB -4.04 -6.13 -2.74 0.01 10.38 -3.76 -0.33 1.93 0.67
+## AST 1.85 6.08 0.06 -0.03 -3.76 5.49 0.66 -1.10 0.80
+## STL 0.07 0.10 -0.04 -0.01 -0.33 0.66 0.23 -0.16 0.08
+## BLK -1.08 -0.77 -1.04 0.01 1.93 -1.10 -0.16 0.52 -0.03
+## TOV -0.55 -0.07 0.90 -0.01 0.67 0.80 0.08 -0.03 0.59
+##
+## [1] &quot;3rd&quot;
+## [[1]]
+## Age GS PTS TS TRB AST STL BLK TOV
+## Age 7.71 -15.27 4.29 0.01 -2.06 3.75 -0.10 -0.57 0.86
+## GS -15.27 79.83 -17.41 -0.10 7.69 -9.44 -0.95 2.00 -1.88
+## PTS 4.29 -17.41 21.66 -0.01 -9.29 5.19 0.39 -2.14 2.12
+## TS 0.01 -0.10 -0.01 0.00 0.03 -0.06 -0.01 0.01 -0.02
+## TRB -2.06 7.69 -9.29 0.03 11.99 -3.77 -0.85 1.53 -0.88
+## AST 3.75 -9.44 5.19 -0.06 -3.77 8.29 0.91 -0.80 2.20
+## STL -0.10 -0.95 0.39 -0.01 -0.85 0.91 0.36 -0.14 0.27
+## BLK -0.57 2.00 -2.14 0.01 1.53 -0.80 -0.14 0.33 -0.27
+## TOV 0.86 -1.88 2.12 -0.02 -0.88 2.20 0.27 -0.27 0.80
+##
+## [1] &quot;none&quot;
+## [[1]]
+## Age GS PTS TS TRB AST STL BLK TOV
+## Age 17.62 0.64 -2.92 0.02 0.14 0.05 -0.13 -0.13 -0.55
+## GS 0.64 153.71 14.91 0.10 4.00 1.28 0.75 0.55 0.89
+## PTS -2.92 14.91 23.56 0.04 1.77 3.78 0.46 0.13 2.26
+## TS 0.02 0.10 0.04 0.00 0.03 -0.01 0.00 0.00 0.00
+## TRB 0.14 4.00 1.77 0.03 6.75 -1.03 -0.07 0.88 0.29
+## AST 0.05 1.28 3.78 -0.01 -1.03 3.97 0.40 -0.25 1.08
+## STL -0.13 0.75 0.46 0.00 -0.07 0.40 0.15 -0.02 0.12
+## BLK -0.13 0.55 0.13 0.00 0.88 -0.25 -0.02 0.26 0.02
+## TOV -0.55 0.89 2.26 0.00 0.29 1.08 0.12 0.02 0.52</code></pre>
+<p>For assumptions, multivariate normality can be assumed met because there are far more than 25 observances of each dependent variable. Homogeneity of within-group covariance was difficult to asses due to the number of variables, but a breif eyeball test shows that variances clearly aren’t equal between the groups.</p>
+</div>
+<div id="randomization" class="section level1">
+<h1>Randomization</h1>
+<p>This randomization model performs a t-test between the group of non All NBA players and All NBA players to test for a difference in true shooting percentage (TS%). The null hypothesis is that the true difference in TS% between non All NBA and All NBA players is equal to 0. The alternative hypothesis is that the true difference in TS% between non All NBA and All NBA players is not equal to 0.</p>
+<pre class="r"><code>#un randomized
+nAll &lt;- work %&gt;% filter(All == &quot;none&quot;) %&gt;% select(TS) 
+yAll &lt;- work %&gt;% filter(All != &quot;none&quot;) %&gt;% select(TS)
+origDiff &lt;- mean(yAll$TS, na.rm = T) - mean(nAll$TS, na.rm = T)
+t.test(nAll$TS, yAll$TS)</code></pre>
+<pre><code>##
+## Welch Two Sample t-test
+##
+## data: nAll$TS and yAll$TS
+## t = -6.7845, df = 72.569, p-value = 2.669e-09
+## alternative hypothesis: true difference in means is not
+equal to 0
+## 95 percent confidence interval:
+## -0.05118954 -0.02794187
+## sample estimates:
+## mean of x mean of y
+## 0.5558964 0.5954621</code></pre>
+<pre class="r"><code>#randomize
+set.seed(123)
+diffs &lt;- vector()
+for(i in 1:5000){
+ temp &lt;- work %&gt;% mutate(TS = sample(work$TS))
+ diffs[i] &lt;- temp %&gt;% summarize(mean(TS[All != &quot;none&quot;], na.rm = T) - mean(TS[All == &quot;none&quot;], na.rm = T))
+}
+
+#p-value
+mean(diffs&gt;origDiff | diffs &lt; -origDiff)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>#null dist
+mid &lt;-unlist(diffs, use.names = F)
+dframe &lt;- as.data.frame(mid)
+ggplot(dframe, aes(x = mid)) + geom_histogram() + 
+  geom_vline(aes(xintercept = origDiff), color = &quot;red&quot;, size = 1) +
+  labs(title = &quot;Figure 1: Null distribution and true mean difference of true shooting percentage&quot;, x = &quot;Mean difference in true shooting percentage&quot;) +
+  theme_minimal() + 
+  theme(axis.title  = element_text(size = 12), axis.title.x = element_text(vjust = -1))</code></pre>
+<p><img src="/Project2_files/figure-html/unnamed-chunk-7-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>The p-value of the original t test was far below 0.05, suggesting a significant difference. The randomized p-value was 0, suggesting it was extremely unlikely for the difference of the means to be by chance. This is further visualized in the normal distribution graph, in which the red line is the observed mean difference. Because this observed mean difference is so far out of the range of the random distribution, and considering the previous factors, there is a statistically significant difference in the true mean difference of the true shooting percentages of All NBA and non All NBA players.</p>
+</div>
+<div id="linear-regression" class="section level1">
+<h1>Linear Regression</h1>
+<p>This is a linear regression that tests for the change in TS% as explained by PTS and Conference, as well as the interaction between the two.</p>
+<pre class="r"><code>workC &lt;- work %&gt;% mutate(PTSc = PTS - mean(PTS, na.rm = T))
+fit &lt;- lm(TS ~ PTSc*Conf, data = workC)
+coeftest(fit)</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 0.55838254 0.00244854 228.0470 &lt; 2.2e-16 ***
+## PTSc 0.00164170 0.00048103 3.4129 0.0006908 ***
+## Confwest 0.00356955 0.00347192 1.0281 0.3043507
+## PTSc:Confwest 0.00089395 0.00061364 1.4568 0.1457539
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<p>Examining the coefficient estimates, a player scoring an average number of points in the Eastern Conference will have a TS% of 0.5584. With average points, TS% is on average 0.0036 higher for Western Conference players than Eastern Conference players. For a player in the Eastern Conference, TS% increases by 0.0016 for each 1 unit increase in PTS. For Western Conference players, the slope of PTS on TS% is 0.0009 higher than that of Eastern Conference players.</p>
+<pre class="r"><code>ggplot(work, aes(PTS, TS, group = Conf)) + geom_point(aes(color = Conf))+
+  geom_smooth(method = &quot;lm&quot;, se = F, fullrange = T, aes(color = Conf)) +
+  theme_minimal() + 
+  theme(legend.position = c(.9,.19)) + 
+  labs(title = &quot;Figure 2: True shooting percentages as explained by points and conference&quot;, y = &quot;True shooting percentage&quot;, x = &quot;Points per game&quot;)</code></pre>
+<p><img src="/Project2_files/figure-html/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>This is a graph of the linear model. The significant effect of points on TS% is clearly visible. The insignificant effect of being in the Western conference is also visible, as they tend to have higher TS%. As the insignificant interaction suggests, TS% increases with points faster in the Western Conference.</p>
+<pre class="r"><code>#norm
+ggplot(fit) + geom_histogram(aes(fit$residuals), bins = 20) + 
+  labs(title = &quot;Figure 3: Normality of residuals&quot;, x = &quot;Residuals&quot;) +
+  theme_minimal() + 
+  theme(axis.title = element_text(size = &quot;12&quot;))</code></pre>
+<p><img src="/Project2_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#homo
+ggplot(fit, aes(fit$fitted.values, fit$residuals)) + geom_point() + 
+  geom_hline(yintercept = 0, color = &quot;red&quot;) + 
+  labs(title = &quot;Figure 4: Homoskedasticity&quot;, x = &quot;Fitted Values&quot;, y = &quot;Residuals&quot;) +
+  theme_minimal() + 
+  theme(axis.title = element_text(size = &quot;12&quot;))</code></pre>
+<p><img src="/Project2_files/figure-html/unnamed-chunk-10-2.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bptest(fit)</code></pre>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  fit
+## BP = 21.455, df = 3, p-value = 8.467e-05</code></pre>
+<p>For the linearity assumption, refer to the scatter plot on Figure 2. It does appear to be a linear relationship. To assess the normality, Figure 3 was created. The residuals do appear to have a normal distribution. To assess homoskedasticity, Figure 4 was created and a Breusch-Pagan test was run. According to the results, homoskedasticity was not met.This means the model must be recomputed using robust standard errors.</p>
+<pre class="r"><code>coeftest(fit, vcov = vcovHC(fit))</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 0.55838254 0.00220290 253.4766 &lt; 2.2e-16 ***
+## PTSc 0.00164170 0.00044010 3.7303 0.0002114 ***
+## Confwest 0.00356955 0.00348449 1.0244 0.3060971
+## PTSc:Confwest 0.00089395 0.00058929 1.5170 0.1298524
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<p>There was essentially no difference between the first model and the second one using robust standard errors. The significance stayed the same, and the coefficients were barely adjusted.</p>
+</div>
+<div id="boostrapping" class="section level1">
+<h1>Boostrapping</h1>
+<p>The model will be run a third time, but this time computing standard errors using bootstrapping.</p>
+<pre class="r"><code>set.seed(123)
+bootFrame &lt;- work %&gt;% select(TS, PTS, Conf)
+bootFit &lt;- lm(TS~PTS*Conf, data = bootFrame)
+resids &lt;- bootFit$residuals
+fitted &lt;- bootFit$fitted.values
+coef(bootFit)</code></pre>
+<pre><code>##   (Intercept)           PTS      Confwest  PTS:Confwest 
+##  0.5338990311  0.0016416981 -0.0097623425  0.0008939462</code></pre>
+<pre class="r"><code>boot &lt;- replicate(5000, {
+  new_resids &lt;- sample(resids, replace = TRUE)
+  bootFrame$new_y &lt;- fitted+new_resids
+  fit2&lt;-lm(new_y~PTS*Conf, data = bootFrame)
+  coef(fit2)
+})
+
+boot %&gt;% t %&gt;% as.data.frame %&gt;% summarize_all(sd)</code></pre>
+<pre><code>##   (Intercept)          PTS    Confwest PTS:Confwest
+## 1 0.007590541 0.0004914359 0.009870799 0.0006239247</code></pre>
+<p>The standard errors of the intercept, PTS, and the PTS:Western Conference interaction were all essentially equal to each other through the three tests. However, the bootstrapped standard error for the Western Conference is 0.0097, approximately three times the 0.0035 standard error found in the first model and the model with robust standard errors.</p>
+</div>
+<div id="logistic-regression" class="section level1">
+<h1>Logistic Regression</h1>
+<p>For the logistic regression, we need to create a new binary variable. The All NBA team variable can be made binary by making 1st, 2nd, and 3rd teams all equal to 1, while non All NBA is equal to 0. We are using each of the remaining variables (except name) as explanatory variables. Each of these variables, except conference, are mean centered.</p>
+<pre class="r"><code>#create binary
+workCenter &lt;- work %&gt;% mutate_if(is.numeric, scale) %&gt;%mutate(isAll = ifelse(All == &quot;none&quot;, 0, 1))
+logFit &lt;- glm(isAll ~ . - Player - All, data = workCenter, family = &quot;binomial&quot;)
+summary(logFit)</code></pre>
+<pre><code>##
+## Call:
+## glm(formula = isAll ~ . - Player - All, family =
+&quot;binomial&quot;,
+## data = workCenter)
+##
+## Deviance Residuals:
+## Min 1Q Median 3Q Max
+## -2.74697 -0.13578 -0.03976 -0.00701 2.60118
+##
+## Coefficients:
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -6.1717 0.7946 -7.767 8.01e-15 ***
+## Confwest 0.3928 0.4919 0.799 0.424499
+## Age 0.6691 0.3290 2.033 0.042005 *
+## GS 1.5598 0.4126 3.781 0.000156 ***
+## PTS 2.3674 0.4102 5.771 7.87e-09 ***
+## TS 0.8890 0.3117 2.852 0.004346 **
+## TRB 0.7447 0.3347 2.225 0.026086 *
+## AST 0.8291 0.4017 2.064 0.039031 *
+## STL 0.8730 0.2615 3.338 0.000843 ***
+## BLK 0.5313 0.3483 1.525 0.127227
+## TOV -0.6125 0.4769 -1.284 0.199030
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## (Dispersion parameter for binomial family taken to be 1)
+##
+## Null deviance: 378.38 on 546 degrees of freedom
+## Residual deviance: 129.83 on 536 degrees of freedom
+## AIC: 151.83
+##
+## Number of Fisher Scoring iterations: 8</code></pre>
+<p>There are many variables, some significant and some not. A brief interpretation of the coefficients is that a perfectly average Eastern conference player has a estimated logOdds of -6.1717. If in the Western Conference, those odds increase by 0.3928. Then, for each 1 unit increase from the average of Age, games started, points, true shooting percentage, total rebounds, assists, steals, blocks, and turnovers, there is a 0.6691, 1.5598, 2.3674, 0.8890, 0.7447, 0.8291, 0.8730, 0.5313, and -0.6125 increase in odds, respectively.</p>
+<pre class="r"><code>#confusion matrix
+prob &lt;- predict(logFit, type=&quot;response&quot;)
+table(predict = as.numeric(prob &gt; 0.5), truth = workCenter$isAll) %&gt;% addmargins()</code></pre>
+<pre><code>##        truth
+## predict   0   1 Sum
+##     0   477  16 493
+##     1    10  44  54
+##     Sum 487  60 547</code></pre>
+<pre class="r"><code>class_diag(prob, workCenter$isAll)</code></pre>
+<pre><code>##        acc      sens      spec       ppv      auc
+## 1 0.952468 0.7333333 0.9794661 0.8148148 0.977447</code></pre>
+<p>Above is the confusion matrix of the model. The accuracy of the model was 0.952, the sensitivity was 0.733, the specificity was 0.979, and the recall was 0.815. AUC will be interpreted later on with the ROC curve.</p>
+<pre class="r"><code>#log odds dist
+workCenter %&gt;% mutate(logOdds = predict(logFit, type = &quot;link&quot;)) %&gt;% 
+  mutate(allLong = ifelse(isAll == 1, &quot;All NBA&quot;, &quot;Not All NBA&quot;)) %&gt;%
+  ggplot() + geom_density(aes(logOdds, color = allLong, fill = allLong), alpha = 0.4) + 
+  xlim(-20,10)+
+  geom_rug(aes(logOdds, color = allLong)) +
+  geom_vline(xintercept = 0, size = 1) + 
+  labs(title = &quot;Figure 5: Log odds distribution&quot;, x = &quot;Log odds&quot;, fill = &quot;All NBA Status&quot;, color = &quot;All NBA Status&quot;) + 
+  theme_minimal()+
+  theme(legend.position = c(.10, .85),legend.background = element_rect(color = &quot;white&quot;),  axis.title = element_text(size = 12))</code></pre>
+<p><img src="/Project2_files/figure-html/unnamed-chunk-15-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#ROC
+prob &lt;- predict(logFit, type = &quot;response&quot;)
+ROC &lt;- ggplot(workCenter) + geom_roc(aes(d = isAll, m = prob), n.cuts = 0) + 
+  labs(title = &quot;Figure 6: ROC Curve&quot;, x = &quot;False positive fraction&quot;, y = &quot;False negative fraction&quot;) +
+  theme_minimal() + 
+  theme(axis.title = element_text(size = 12))
+auc = calc_auc(ROC)
+ROC + annotate(&quot;label&quot;, x = 0.8, y = 0.5, label = paste(&quot;AUC: &quot;, auc))</code></pre>
+<p><img src="/Project2_files/figure-html/unnamed-chunk-15-2.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Figure 5 is a plot of the log odds dist. For All NBA, the area to the right of the vertical line is true positive, the area to the left is false negative. For the not All NBA, the area to the right is false positive, the area to the left is true negative.</p>
+<p>Figure 6 is an ROC curve. The curve is very nearly flush with the left corner, which is ideal. This can be quantized by the AUC of 0.977, which is very good.</p>
+<pre class="r"><code>#10 cv
+set.seed(123)
+k = 10
+data1 &lt;- workCenter[sample(nrow(workCenter)), 3:13]
+folds &lt;- cut(seq(1:nrow(workCenter)), breaks = k, labels = F)
+
+diags &lt;- NULL
+for(i in 1:k){
+ train &lt;- data1[folds != i, ]
+ test &lt;- data1[folds == i, ]
+ truth &lt;- test$isAll
+ 
+ fit &lt;- glm(isAll ~ . , data = train, family = &quot;binomial&quot;)
+ probs &lt;- predict(fit, newdata = test, type = &quot;response&quot;)
+ diags &lt;- rbind(diags, class_diag(probs, truth))
+}
+
+summarize_all(diags, mean)</code></pre>
+<pre><code>##         acc      sens      spec       ppv       auc
+## 1 0.9396296 0.6850794 0.9732556 0.7355556 0.9674506</code></pre>
+<p>Peforming 10 fold cross validation yields an accuracy of 0.940, a sensitivity of 0.685, a specificity of 0.973, a recall of 0.736, and an AUC of 0.967. These values are similar but very slightly reduced when compared to those of the original model. This suggests the original model might be overfit, but the differences are very small.</p>
+</div>
+<div id="lasso" class="section level1">
+<h1>Lasso</h1>
+<p>To generate a model that isn’t overfitted, we can use a LASSO regression.</p>
+<pre class="r"><code>set.seed(1234)
+y &lt;- as.matrix(workCenter$isAll)
+x &lt;- model.matrix(isAll~. - Player - All, data = workCenter)[,-1]
+cv &lt;- cv.glmnet(x,y,family = &quot;binomial&quot;)
+lasso &lt;- glmnet(x,y,family = &quot;binomial&quot;, lambda = cv$lambda.1se)
+coef(lasso)</code></pre>
+<pre><code>## 11 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                      s0
+## (Intercept) -3.40165989
+## Confwest     .         
+## Age          .         
+## GS           0.29132214
+## PTS          1.35968316
+## TS           0.41755538
+## TRB          0.39601989
+## AST          0.19710417
+## STL          0.36198456
+## BLK          0.04026362
+## TOV          .</code></pre>
+<p>According to the LASSO regression, the non zero parameters are GS, PTS, TS, TRB, AST, STL and BLK. These variables will be used for a new model.</p>
+<pre class="r"><code>set.seed(123)
+k = 10
+data1 &lt;- workCenter[sample(nrow(workCenter)), 3:13]
+folds &lt;- cut(seq(1:nrow(workCenter)), breaks = k, labels = F)
+
+diags &lt;- NULL
+for(i in 1:k){
+ train &lt;- data1[folds != i, ]
+ test &lt;- data1[folds == i, ]
+ truth &lt;- test$isAll
+ 
+ fit &lt;- glm(isAll ~ GS + PTS + TS + TRB + AST + STL + BLK, data = train, family = &quot;binomial&quot;)
+ probs &lt;- predict(fit, newdata = test, type = &quot;response&quot;)
+ diags &lt;- rbind(diags, class_diag(probs, truth))
+}
+
+summarize_all(diags, mean)</code></pre>
+<pre><code>##        acc      sens      spec    ppv       auc
+## 1 0.946936 0.7047619 0.9772946 0.7775 0.9679275</code></pre>
+<p>A new 10 fold cross validation was performed using only the predictors the non-zero predictor variables from the LASSO regression. Comparing this to the 10 fold CV done with the full model, the accuracy, specificity, sensitivity, recall, and AUC are all essentially identical. This suggests that using the LASSO model didn’t really improve significantly on the fit of the model. The original model was already quite good, so this isn’t shocking.</p>
+</div>

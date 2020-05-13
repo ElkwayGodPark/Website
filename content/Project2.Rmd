@@ -1,0 +1,431 @@
+---
+title: 'Project 2: Modeling, Testing, and Predicting'
+author: "SDS348"
+date: ''
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = knitr:::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE,fig.align="center",warning=FALSE,message=FALSE,fig.width=8, fig.height=5, linewidth=60)
+options(tibble.width = 100,width = 100)
+library(tidyverse)
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(kableExtra)
+library(reshape2)
+library(rex)
+library(lmtest)
+library(sandwich)
+library(plotROC)
+library(glmnet)
+
+class_diag<-function(probs,truth){
+  
+  tab<-table(factor(probs>.5,levels=c("FALSE","TRUE")),truth)
+  acc=sum(diag(tab))/sum(tab)
+  sens=tab[2,2]/colSums(tab)[2]
+  spec=tab[1,1]/colSums(tab)[1]
+  ppv=tab[2,2]/rowSums(tab)[2]
+
+  if(is.numeric(truth)==FALSE & is.logical(truth)==FALSE) truth<-as.numeric(truth)-1
+  
+  #CALCULATE EXACT AUC
+  ord<-order(probs, decreasing=TRUE)
+  probs <- probs[ord]; truth <- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup<-c(probs[-1]>=probs[-length(probs)], FALSE)
+  TPR<-c(0,TPR[!dup],1); FPR<-c(0,FPR[!dup],1)
+  
+  n <- length(TPR)
+  auc<- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,auc)
+}
+
+tot16 <- read_csv("C:/Users/Will V/Dropbox/SCHOOL/S20/Biostats/2016.csv")
+tot17 <- read_csv("C:/Users/Will V/Dropbox/SCHOOL/S20/Biostats/2017.csv")
+tot18 <- read_csv("C:/Users/Will V/Dropbox/SCHOOL/S20/Biostats/2018.csv")
+tot19 <- read_csv("C:/Users/Will V/Dropbox/SCHOOL/S20/Biostats/2019.csv")
+all <- read_csv("C:/Users/Will V/Dropbox/SCHOOL/S20/Biostats/all.csv")
+
+#add season to player stats
+tot16 <- tot16 %>% mutate(Season = "2015-16")
+tot17 <- tot17 %>% mutate(Season = "2016-17")
+tot18 <- tot18 %>% mutate(Season = "2017-18")
+tot19 <- tot19 %>% mutate(Season = "2018-19")
+#Remove player name extras
+tot16$Player = gsub("\\", " ", tot16$Player, fixed = TRUE)
+tot16$Player = str_extract(tot16$Player, "^([^\\s]+\\s*[^\\s]+)")
+
+tot17$Player = gsub("\\", " ", tot17$Player, fixed = TRUE)
+tot17$Player = str_extract(tot17$Player, "^([^\\s]+\\s*[^\\s]+)")
+
+
+tot18$Player = gsub("\\", " ", tot18$Player, fixed = TRUE)
+tot18$Player = str_extract(tot18$Player, "^([^\\s]+\\s*[^\\s]+)")
+
+
+tot19$Player = gsub("\\", " ", tot19$Player, fixed = TRUE)
+tot19$Player = str_extract(tot19$Player, "^([^\\s]+\\s*[^\\s]+)")
+
+
+
+#pivot allnba to be by player name
+all <- all %>% pivot_longer(cols = c("X3", "X4", "X5", "X6", "X7"), values_to = "Player") %>%  mutate(All = Tm) %>% select(-name, -Tm)
+#Remove positions in name
+all$Player = str_extract(all$Player, "^([^\\s]+\\s*[^\\s]+)")
+#Replace NA with none
+
+#join datasets
+mid1 <- full_join(tot16, tot17)
+mid2 <- full_join(tot18, tot19)
+mid3 <- full_join(mid1, mid2) %>% filter(Tm != "TOT")
+data <- full_join(mid3, all, by = c("Player", "Season"))
+#cut to starters
+data <- data %>% filter(GS >= 41)
+
+#replace NA with none
+data <- data %>% replace(is.na(.), "none")
+```
+# Introduction
+
+Before the data can be used, it has to be cleaned and joined together.This results in a 2297 row by 31 column sheet, containing every players season stats for the 2015-16 to the 2018-19 season, as well as whether or not they placed into All NBA. The dataset is trimmed to only contain "starters", or players with at least 41 games started in the season (half total games). This reduces the set to 547 observations of players who could potentially earn All NBA. Not restricting observations to this population allows for players with nearly 0 minutes a game to greatly affect the analysis.
+
+The sheer number of stats available is too much, so it first will be reduced to the variables player, allNBA team, age, games started, points, total rebounds, assists, steals, blocks, turnovers, conference, and true shooting percentage. Teams are converted into conference (East and West), as having 30 groups for a categorical variable is far too many. True shooting percentage is calculated by points/(2 * (Field goals attempted + 0.44 * free throws attempted)). This measure accounts for free throws, which are real points, when measuring player efficiency, as well as the difference in value of a 3pt and 2pt shot.
+```{r}
+#Create conference variable
+east <- c("MIL", "TOR", "BOS", "ATL", "BRK", "CHI", 
+          "CHO", "CLE", "DET", "IND", "MIA", 
+          "NYK", "ORL", "PHI", "WAS")
+data <- data %>% mutate(Conf = ifelse(Tm %in% east, "east", "west"))
+
+#Create TS variable
+data <- data %>% mutate(TS = PTS/(2 * (FGA + 0.44*FTA)))
+
+#Select wanted variables 
+work <- data %>% select(Player, All, Conf, Age, GS, PTS, TS, TRB, AST, STL, BLK, TOV)
+```
+# MANOVA
+The first model is a MANOVA. The categorical variable of All NBA Team is tested with every numeric variable: Age, games started(GS), points(PTS), true shooting(TS%), total rebounds(TRB), assists (AST), steals (STL), blocks (BLK), and turnovers (TOV). 
+
+```{r}
+man <- manova(cbind(Age,GS,PTS,TS,TRB,AST,STL,BLK,TOV) ~ All, data = work)
+
+summary(man)
+
+```
+There is most definitely significance in this model, so it's worth performing individual anovas on each variable. 
+
+```{r}
+summary(aov(man))
+```
+Rather unsurprisingly, the majority of the variables did show a mean difference across All NBA teams. This is to be expected, as a player in an All NBA team is one of the 15 best players of the year, compared to 150 starters, and All NBA players most certainly have higher averages for stats like PTS and REBS than a standard starter. Additionally, not all starters play the same minutes. Some play as few as 25, the better ones play upwards of 35.
+
+Age was the only statistic to not have mean differences across the All NBA teams.
+
+```{r}
+1 - .95^61
+0.05/61
+```
+
+One MANOVA, 10 ANOVAs, and 60 t-tests were performed, for a total of 61 tests. This means the probability of a Type I error was 0.956. To correct the number back to 0.05, a Bonferroni adjusted significance level of 0.00082 is necessary.
+
+
+```{r}
+pairwise.t.test(work$GS, work$All, p.adj = "none")
+pairwise.t.test(work$PTS, work$All, p.adj = "none")
+pairwise.t.test(work$TS, work$All, p.adj = "none")
+pairwise.t.test(work$TRB, work$All, p.adj = "none")
+pairwise.t.test(work$AST, work$All, p.adj = "none")
+pairwise.t.test(work$STL, work$All, p.adj = "none")
+pairwise.t.test(work$BLK, work$All, p.adj = "none")
+pairwise.t.test(work$TOV, work$All, p.adj = "none")
+```
+
+Post-hoc t-tests were performed on every variable significantly affected by All NBA status. All of these comparisons were done with the Bonferroni adjusted p-value (0.00082).
+
+For GS, there was a statistically significant difference between the 1st team and non All NBA players.
+
+For PTS, there were significant differences between non All NBA and all 3 All NBA teams, and a significant difference between the 1st and 3rd team.
+
+For TS%, there were significant differences between non All NBA and both the 1st and 2nd teams.
+
+For TRB, there were significant differences betweeen non All NBA and all three All NBA teams.
+
+For AST, there were significant differences betweeen non All NBA and all three All NBA teams.
+
+For STL, there were significant differences between non All NBA and both the 1st and 3rd teams.
+
+For BLK, there were no significant differences.
+
+For TOV, there were significant differences betweeen non All NBA and all three All NBA teams.
+
+```{r}
+covmats <- work %>% group_by(All) %>% do(covs = round(cov(.[4:12]), digits = 2))
+for(i in 1:4){
+  print(as.character(covmats$All[i])); print(covmats$covs[i])
+}
+```
+
+For assumptions, multivariate normality can be assumed met because there are far more than 25 observances of each dependent variable. Homogeneity of within-group covariance was difficult to asses due to the number of variables, but a breif eyeball test shows that variances clearly aren't equal between the groups.
+
+# Randomization
+
+This randomization model performs a t-test between the group of non All NBA players and All NBA players to test for a difference in true shooting percentage (TS%). The null hypothesis is that the true difference in TS% between non All NBA and All NBA players is equal to 0. The alternative hypothesis is that the true difference in TS% between non All NBA and All NBA players is not equal to 0. 
+
+
+```{r}
+#un randomized
+nAll <- work %>% filter(All == "none") %>% select(TS) 
+yAll <- work %>% filter(All != "none") %>% select(TS)
+origDiff <- mean(yAll$TS, na.rm = T) - mean(nAll$TS, na.rm = T)
+t.test(nAll$TS, yAll$TS)
+
+#randomize
+set.seed(123)
+diffs <- vector()
+for(i in 1:5000){
+ temp <- work %>% mutate(TS = sample(work$TS))
+ diffs[i] <- temp %>% summarize(mean(TS[All != "none"], na.rm = T) - mean(TS[All == "none"], na.rm = T))
+}
+
+#p-value
+mean(diffs>origDiff | diffs < -origDiff)
+
+#null dist
+mid <-unlist(diffs, use.names = F)
+dframe <- as.data.frame(mid)
+ggplot(dframe, aes(x = mid)) + geom_histogram() + 
+  geom_vline(aes(xintercept = origDiff), color = "red", size = 1) +
+  labs(title = "Figure 1: Null distribution and true mean difference of true shooting percentage", x = "Mean difference in true shooting percentage") +
+  theme_minimal() + 
+  theme(axis.title  = element_text(size = 12), axis.title.x = element_text(vjust = -1))
+```
+
+The p-value of the original t test was far below 0.05, suggesting a significant difference. The randomized p-value was 0, suggesting it was extremely unlikely for the difference of the means to be by chance. This is further visualized in the normal distribution graph, in which the red line is the observed mean difference. Because this observed mean difference is so far out of the range of the random distribution, and considering the previous factors, there is a statistically significant difference in the true mean difference of the true shooting percentages of All NBA and non All NBA players.
+
+# Linear Regression
+This is a linear regression that tests for the change in TS% as explained by PTS and Conference, as well as the interaction between the two. 
+
+```{r}
+workC <- work %>% mutate(PTSc = PTS - mean(PTS, na.rm = T))
+fit <- lm(TS ~ PTSc*Conf, data = workC)
+coeftest(fit)
+```
+
+Examining the coefficient estimates, a player scoring an average number of points in the Eastern Conference will have a TS% of 0.5584. With average points, TS% is on average 0.0036 higher for Western Conference players than Eastern Conference players. For a player in the Eastern Conference, TS% increases by 0.0016 for each 1 unit increase in PTS. For Western Conference players, the slope of PTS on TS% is 0.0009 higher than that of Eastern Conference players.
+
+```{r}
+ggplot(work, aes(PTS, TS, group = Conf)) + geom_point(aes(color = Conf))+
+  geom_smooth(method = "lm", se = F, fullrange = T, aes(color = Conf)) +
+  theme_minimal() + 
+  theme(legend.position = c(.9,.19)) + 
+  labs(title = "Figure 2: True shooting percentages as explained by points and conference", y = "True shooting percentage", x = "Points per game")
+
+```
+
+This is a graph of the linear model. The significant effect of points on TS% is clearly visible. The insignificant effect of being in the Western conference is also visible, as they tend to have higher TS%. As the insignificant interaction suggests, TS% increases with points faster in the Western Conference.
+
+```{r}
+#norm
+ggplot(fit) + geom_histogram(aes(fit$residuals), bins = 20) + 
+  labs(title = "Figure 3: Normality of residuals", x = "Residuals") +
+  theme_minimal() + 
+  theme(axis.title = element_text(size = "12"))
+
+#homo
+ggplot(fit, aes(fit$fitted.values, fit$residuals)) + geom_point() + 
+  geom_hline(yintercept = 0, color = "red") + 
+  labs(title = "Figure 4: Homoskedasticity", x = "Fitted Values", y = "Residuals") +
+  theme_minimal() + 
+  theme(axis.title = element_text(size = "12"))
+bptest(fit)
+```
+
+For the linearity assumption, refer to the scatter plot on Figure 2. It does appear to be a linear relationship. To assess the normality, Figure 3 was created. The residuals do appear to have a normal distribution. To assess homoskedasticity, Figure 4 was created and a Breusch-Pagan test was run. According to the results, homoskedasticity was not met.This means the model must be recomputed using robust standard errors.
+
+```{r}
+coeftest(fit, vcov = vcovHC(fit))
+```
+
+There was essentially no difference between the first model and the second one using robust standard errors. The significance stayed the same, and the coefficients were barely adjusted.
+
+# Boostrapping
+
+The model will be run a third time, but this time computing standard errors using bootstrapping. 
+
+```{r}
+set.seed(123)
+bootFrame <- work %>% select(TS, PTS, Conf)
+bootFit <- lm(TS~PTS*Conf, data = bootFrame)
+resids <- bootFit$residuals
+fitted <- bootFit$fitted.values
+coef(bootFit)
+
+boot <- replicate(5000, {
+  new_resids <- sample(resids, replace = TRUE)
+  bootFrame$new_y <- fitted+new_resids
+  fit2<-lm(new_y~PTS*Conf, data = bootFrame)
+  coef(fit2)
+})
+
+boot %>% t %>% as.data.frame %>% summarize_all(sd)
+```
+
+The standard errors of the intercept, PTS, and the PTS:Western Conference interaction were all essentially equal to each other through the three tests. However, the bootstrapped standard error for the Western Conference is 0.0097, approximately three times the 0.0035 standard error found in the first model and the model with robust standard errors.
+
+# Logistic Regression
+For the logistic regression, we need to create a new binary variable. The All NBA team variable can be made binary by making 1st, 2nd, and 3rd teams all equal to 1, while non All NBA is equal to 0. We are using each of the remaining variables (except name) as explanatory variables. Each of these variables, except conference, are mean centered.
+
+```{r}
+#create binary
+workCenter <- work %>% mutate_if(is.numeric, scale) %>%mutate(isAll = ifelse(All == "none", 0, 1))
+logFit <- glm(isAll ~ . - Player - All, data = workCenter, family = "binomial")
+summary(logFit)
+```
+
+There are many variables, some significant and some not. A brief interpretation of the coefficients is that a perfectly average Eastern conference player has a estimated logOdds of -6.1717. If in the Western Conference, those odds increase by 0.3928. Then, for each 1 unit increase from the average of Age, games started, points, true shooting percentage, total rebounds, assists, steals, blocks, and turnovers, there is a 0.6691, 1.5598, 2.3674, 0.8890, 0.7447, 0.8291, 0.8730, 0.5313, and -0.6125 increase in odds, respectively.
+
+```{r}
+#confusion matrix
+prob <- predict(logFit, type="response")
+table(predict = as.numeric(prob > 0.5), truth = workCenter$isAll) %>% addmargins()
+
+class_diag(prob, workCenter$isAll)
+```
+
+Above is the confusion matrix of the model. The accuracy of the model was 0.952, the sensitivity was 0.733, the specificity was 0.979, and the recall was 0.815. AUC will be interpreted later on with the ROC curve.
+
+```{r}
+#log odds dist
+workCenter %>% mutate(logOdds = predict(logFit, type = "link")) %>% 
+  mutate(allLong = ifelse(isAll == 1, "All NBA", "Not All NBA")) %>%
+  ggplot() + geom_density(aes(logOdds, color = allLong, fill = allLong), alpha = 0.4) + 
+  xlim(-20,10)+
+  geom_rug(aes(logOdds, color = allLong)) +
+  geom_vline(xintercept = 0, size = 1) + 
+  labs(title = "Figure 5: Log odds distribution", x = "Log odds", fill = "All NBA Status", color = "All NBA Status") + 
+  theme_minimal()+
+  theme(legend.position = c(.10, .85),legend.background = element_rect(color = "white"),  axis.title = element_text(size = 12))
+
+#ROC
+prob <- predict(logFit, type = "response")
+ROC <- ggplot(workCenter) + geom_roc(aes(d = isAll, m = prob), n.cuts = 0) + 
+  labs(title = "Figure 6: ROC Curve", x = "False positive fraction", y = "False negative fraction") +
+  theme_minimal() + 
+  theme(axis.title = element_text(size = 12))
+auc = calc_auc(ROC)
+ROC + annotate("label", x = 0.8, y = 0.5, label = paste("AUC: ", auc))
+```
+
+Figure 5 is a plot of the log odds dist. For All NBA, the area to the right of the vertical line is true positive, the area to the left is false negative. For the not All NBA, the area to the right is false positive, the area to the left is true negative.
+
+Figure 6 is an ROC curve. The curve is very nearly flush with the left corner, which is ideal. This can be quantized by the AUC of 0.977, which is very good.
+
+```{r}
+#10 cv
+set.seed(123)
+k = 10
+data1 <- workCenter[sample(nrow(workCenter)), 3:13]
+folds <- cut(seq(1:nrow(workCenter)), breaks = k, labels = F)
+
+diags <- NULL
+for(i in 1:k){
+ train <- data1[folds != i, ]
+ test <- data1[folds == i, ]
+ truth <- test$isAll
+ 
+ fit <- glm(isAll ~ . , data = train, family = "binomial")
+ probs <- predict(fit, newdata = test, type = "response")
+ diags <- rbind(diags, class_diag(probs, truth))
+}
+
+summarize_all(diags, mean)
+```
+
+Peforming 10 fold cross validation yields an accuracy of 0.940, a sensitivity of 0.685, a specificity of 0.973, a recall of 0.736, and an AUC of 0.967. These values are similar but very slightly reduced when compared to those of the original model. This suggests the original model might be overfit, but the differences are very small.
+
+# Lasso
+To generate a model that isn't overfitted, we can use a LASSO regression.
+
+```{r}
+set.seed(1234)
+y <- as.matrix(workCenter$isAll)
+x <- model.matrix(isAll~. - Player - All, data = workCenter)[,-1]
+cv <- cv.glmnet(x,y,family = "binomial")
+lasso <- glmnet(x,y,family = "binomial", lambda = cv$lambda.1se)
+coef(lasso)
+```
+
+According to the LASSO regression, the non zero parameters are GS, PTS, TS, TRB, AST, STL and BLK. These variables will be used for a new model.
+
+```{r}
+set.seed(123)
+k = 10
+data1 <- workCenter[sample(nrow(workCenter)), 3:13]
+folds <- cut(seq(1:nrow(workCenter)), breaks = k, labels = F)
+
+diags <- NULL
+for(i in 1:k){
+ train <- data1[folds != i, ]
+ test <- data1[folds == i, ]
+ truth <- test$isAll
+ 
+ fit <- glm(isAll ~ GS + PTS + TS + TRB + AST + STL + BLK, data = train, family = "binomial")
+ probs <- predict(fit, newdata = test, type = "response")
+ diags <- rbind(diags, class_diag(probs, truth))
+}
+
+summarize_all(diags, mean)
+```
+A new 10 fold cross validation was performed using only the predictors the non-zero predictor variables from the LASSO regression. Comparing this to the 10 fold CV done with the full model, the accuracy, specificity, sensitivity, recall, and AUC are all essentially identical. This suggests that using the LASSO model didn't really improve significantly on the fit of the model. The original model was already quite good, so this isn't shocking.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

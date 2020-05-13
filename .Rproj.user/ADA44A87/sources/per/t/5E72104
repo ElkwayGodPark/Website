@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589395589095.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3961524505",
+    "id" : "5E72104",
+    "lastKnownWriteTime" : 1589395984,
+    "last_content_update" : 1589395984190,
+    "path" : "C:/Users/Will V/Dropbox/SCHOOL/S20/Biostats/Website/content/Project1.Rmd",
+    "project_path" : "content/Project1.Rmd",
+    "properties" : {
+        "cursorPosition" : "95,100",
+        "scrollLine" : "87"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
