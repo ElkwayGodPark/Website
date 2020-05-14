@@ -13,14 +13,14 @@ theme = "hugo-sustain"
 [params]
   avatar = "myface.jpg"
   author = "William Graber"
-  description = "Describe your website"
+  description = "Statistics And Data"
 
   # Custom assets can be linked with their paths relative to static/
   custom_css = []
   custom_js  = []
 
 [params.social]
-  Github        = "username"
+  Github        = "ElkwayGodPark"
   Email         = "wgraberv@gmail.com"
 
 ## Main Menu
@@ -38,4 +38,4 @@ theme = "hugo-sustain"
   name = "resume"
   identifier = "resume"
   weight = 300
-  url = "/resume/"
+  url = "/resume.pdf"
