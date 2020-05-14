@@ -103,24 +103,24 @@ Grouping the data by state gives another level of detail and allows for more int
 data %>% group_by(state) %>% summarize_at(c("cvap", "rep_pres", "dem_pres", "other_pres", "total_votes"), sum) %>%
   mutate(turnout = round((total_votes / cvap) * 100)) %>%
   mutate(winner_pres = ifelse(rep_pres > dem_pres, "Trump", "Clinton"))%>%
-  kable("latex", booktabs = T, col.names = c("State", "Voting Age Population", "Votes for Trump", "Votes for Clinton", "Votes for 3rd Party", "Total Votes", "% Turnout", "Winner"), caption = "2016 State Voting Stats") %>% 
-  kable_styling(full_width = T, font_size = 9) %>% column_spec(1, width = "3.5cm")
+  kable(booktabs = T, col.names = c("State", "Voting Age Population", "Votes for Trump", "Votes for Clinton", "Votes for 3rd Party", "Total Votes", "% Turnout", "Winner"), caption = "2016 State Voting Stats") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>% column_spec(1, width = "3.5cm")
 #state mean
 data %>% group_by(state) %>% summarise_at(c("cvap", "pct_29", "pct_65", "pct_rural"), mean, na.rm = T) %>%
-  kable("latex", booktabs = T, col.names = c("State", "Mean Voting Age Population (VAP)", "Mean % of VAP under 29", "Mean % of VAP over 65", "Mean % of VAP in Rural Areas "), caption = "2016 County Population Means by State") %>% 
-  kable_styling(full_width = T, font_size = 9) %>% column_spec(1, width = "3.5cm")
+  kable(booktabs = T, col.names = c("State", "Mean Voting Age Population (VAP)", "Mean % of VAP under 29", "Mean % of VAP over 65", "Mean % of VAP in Rural Areas "), caption = "2016 County Population Means by State") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>% column_spec(1, width = "3.5cm")
 #state median
 data %>% group_by(state) %>% summarise_at(c("cvap", "pct_29", "pct_65", "pct_rural"), median, na.rm = T) %>%
-  kable("latex", booktabs = T, col.names = c("State", "Median Voting Age Population (VAP)", "Median % of VAP under 29", "Median % of VAP over 65", "Median % of VAP in Rural Areas "), caption = "2016 County Population Medians by State") %>% 
-  kable_styling(full_width = T, font_size = 9) %>% column_spec(1, width = "3.5cm")
+  kable(booktabs = T, col.names = c("State", "Median Voting Age Population (VAP)", "Median % of VAP under 29", "Median % of VAP over 65", "Median % of VAP in Rural Areas "), caption = "2016 County Population Medians by State") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>% column_spec(1, width = "3.5cm")
 #state sd
 data %>% group_by(state) %>% summarise_at(c("cvap", "pct_29", "pct_65", "pct_rural"), sd, na.rm = T) %>%
-  kable("latex", booktabs = T, col.names = c("State", "SD Voting Age Population (VAP)", "SD % of VAP under 29", "SD % of VAP over 65", "SD % of VAP in Rural Areas "), caption = "2016 County Population Standard Deviations by State") %>% 
-  kable_styling(full_width = T, font_size = 9) %>% column_spec(1, width = "3.5cm")
+  kable(booktabs = T, col.names = c("State", "SD Voting Age Population (VAP)", "SD % of VAP under 29", "SD % of VAP over 65", "SD % of VAP in Rural Areas "), caption = "2016 County Population Standard Deviations by State") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>% column_spec(1, width = "3.5cm")
 #state var
 data %>% group_by(state) %>% summarise_at(c("cvap", "pct_29", "pct_65", "pct_rural"), var , na.rm = T) %>%
-  kable("latex", booktabs = T, col.names = c("State", "Var of Voting Age Population (VAP)", "Var of % of VAP under 29", "Var of % of VAP over 65", "Var of % of VAP in Rural Areas "), caption = "2016 County Population Variances by State") %>% 
-  kable_styling(full_width = T, font_size = 9) %>% column_spec(1, width = "3.5cm")
+  kable(booktabs = T, col.names = c("State", "Var of Voting Age Population (VAP)", "Var of % of VAP under 29", "Var of % of VAP over 65", "Var of % of VAP in Rural Areas "), caption = "2016 County Population Variances by State") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>% column_spec(1, width = "3.5cm")
 ```
 \newpage
 ### Integrating Health Data
@@ -133,17 +133,17 @@ data %>% group_by(quality_q) %>% arrange(quality_q) %>%
   filter(quality_q != "NR" & quality_q != "5") %>%
   mutate(winner_pres = ifelse(rep_pres > dem_pres, "Republican", "Democrat")) %>%
   summarise(rep_counties = sum(winner_pres == "Republican", na.rm = T), dem_counties = sum(winner_pres == "Democrat", na.rm = T), pct_rep = round((rep_counties/(rep_counties + dem_counties))*100)) %>%
-  kable("latex", booktabs = T, col.names = c("QoL Life Quartile", "Republican Voting Counties", "Democrat Voting Counties", "Percentage of Quartile Voting Republican"), 
+  kable(booktabs = T, col.names = c("QoL Life Quartile", "Republican Voting Counties", "Democrat Voting Counties", "Percentage of Quartile Voting Republican"), 
         caption = "2016 County Quality of Life Quartiles and Voting Preferences") %>% 
-  kable_styling(full_width = T, font_size = 10, latex_options = "hold_position")
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
 data %>% group_by(ses_q) %>% arrange(ses_q) %>%
   filter(ses_q != "NR" & ses_q != "5") %>%
   mutate(winner_pres = ifelse(rep_pres > dem_pres, "Republican", "Democrat")) %>%
   summarise(rep_counties = sum(winner_pres == "Republican", na.rm = T), dem_counties = sum(winner_pres == "Democrat", na.rm = T), pct_rep = round((rep_counties/(rep_counties + dem_counties))*100)) %>%
-  kable("latex", booktabs = T, col.names = c("SES of Life Quartile", "Republican Voting Counties", "Democrat Voting Counties", "Percentage of Quartile Voting Republican"), 
+  kable(booktabs = T, col.names = c("SES of Life Quartile", "Republican Voting Counties", "Democrat Voting Counties", "Percentage of Quartile Voting Republican"), 
         caption = "2016 County SES Quartiles and Voting Preferences") %>% 
-  kable_styling(full_width = T, font_size = 10, latex_options = "hold_position")
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 To find something more interesting, we can use population instead of the number of counties. This is essentially the same data, but each county's population will be added to the total.
 
@@ -151,14 +151,14 @@ To find something more interesting, we can use population instead of the number 
 data %>% group_by(quality_q) %>% arrange(quality_q) %>%
   filter(quality_q != "NR" & quality_q != "5") %>%
   summarise(rep_voters = sum(rep_pres, na.rm = T), dem_voters = sum(dem_pres, na.rm = T), pct_rep = round((rep_voters/(rep_voters + dem_voters)) * 100)) %>%
-  kable("latex", booktabs = T, col.names = c("QoL Quartile", "Republican Voters", "Democrat Voters", "Percentage of Quartile Voting Republican"), caption = "2016 County Quality of Life Quartiles and Voter Populations") %>% 
-  kable_styling(full_width = T, font_size = 10, latex_options = "HOLD_position")
+  kable(booktabs = T, col.names = c("QoL Quartile", "Republican Voters", "Democrat Voters", "Percentage of Quartile Voting Republican"), caption = "2016 County Quality of Life Quartiles and Voter Populations") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
 data %>% group_by(ses_q) %>% arrange(ses_q) %>%
   filter(ses_q != "NR" & ses_q != "5") %>%
   summarise(rep_voters = sum(rep_pres, na.rm = T), dem_voters = sum(dem_pres, na.rm = T), pct_rep = round((rep_voters/(rep_voters + dem_voters)) * 100)) %>%
-  kable("latex", booktabs = T, col.names = c("SES Quartile", "Republican Voters", "Democrat Voters", "Percentage of Quartile Voting Republican"), caption = "2016 County SES Quartiles and Voter Populations") %>% 
-  kable_styling(full_width = T, font_size = 10, latex_options = "HOLD_position")
+  kable(booktabs = T, col.names = c("SES Quartile", "Republican Voters", "Democrat Voters", "Percentage of Quartile Voting Republican"), caption = "2016 County SES Quartiles and Voter Populations") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
 Another way for us to assess relationships is by using a correlation matrix. The choice of variables was quality of life, SES, %29, %65, %rural, and the voting data. Keep in mind that a negative correlation with SES or Quality of Life indicates an INCREASE in that metric, as in this dataset quartile 1 is considered the top quartile. 
@@ -175,8 +175,8 @@ corr <- data %>% ungroup() %>% mutate(pct_rep = round((rep_pres/total_votes) * 1
   rename("QoL Quartile" = quality_q, "SES Quartile" = ses_q, "Percent 29 and Under" = pct_29, "Percent 65 and Over" = pct_65, "Percent Rural" = pct_rural, "Percent Republican" = pct_rep) %>% 
   as.matrix() %>% cor(use = "complete.obs") %>% round(2)
 
-corr %>% kable("latex", booktabs = T, caption = "2016 National Correlation Matrix", row.names = T) %>%
-  kable_styling(full_width = T, font_size = 10, latex_options = "hold_position") %>%
+corr %>% kable(booktabs = T, caption = "2016 National Correlation Matrix", row.names = T) %>%
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   column_spec(1, width = "3.5cm")
 
 ```
@@ -190,8 +190,8 @@ corr2 <- data %>% ungroup() %>% filter(state == "Texas") %>%
   rename("Quality Rank" = quality_r, "SES Rank" = ses_r, "Percent 29 and Under" = pct_29, "Percent 65 and Over" = pct_65, "Percent Rural" = pct_rural, "Percent Republican" = pct_rep) %>% 
   as.matrix() %>% cor(use = "complete.obs") %>% round(2)
 
-corr2 %>% kable("latex", booktabs = T, caption = "2016 Texas Correlation Matrix", row.names = T) %>%
-  kable_styling(full_width = T, font_size = 10, latex_options = "HOLD_position") %>%
+corr2 %>% kable(booktabs = T, caption = "2016 Texas Correlation Matrix", row.names = T) %>%
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   column_spec(1, width = "3.5cm")
 ```
 
@@ -308,8 +308,8 @@ pam_clust$silinfo$widths %>%
 One way of determining along what variables the PMA clustering has clustered the data is by looking at the median values for each cluster. Examining these medians, it's evident that no clustering has occured based on %29, %65, or %republican, as all those values are very similar. The SES and QoL quartiles and the %rural are all potential causes of clustering.
 
 ```{r}
-pam_data%>% mutate(Cluster = as.factor(pam_clust$clustering)) %>% slice(pam_clust$id.med) %>% kable("latex", booktabs = T, col.names = c("QoL quartile", "SES quartile"," % 29 and under", "% 65 and older", "% rural", "% republican", "Cluster"), caption = "2016 national county PAM clustering medians") %>% 
-  kable_styling(full_width = T, font_size = 10, latex_options = "HOLD_position")
+pam_data%>% mutate(Cluster = as.factor(pam_clust$clustering)) %>% slice(pam_clust$id.med) %>% kable(booktabs = T, col.names = c("QoL quartile", "SES quartile"," % 29 and under", "% 65 and older", "% rural", "% republican", "Cluster"), caption = "2016 national county PAM clustering medians") %>% 
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
 This final figure contains all the correlation values and clustering values for each of the variable points. Looking at the grapphs of distribution (the line from the top left to the bottom right corner), it's clear that both the SES and QoL quartile were almost totally separated into two clusters (4 and 3, 2 and 1). Looking at the crossing between SES and QoL, it becomes aparent that the basis for the separation of the groups was primarily by these metrics, in which indiviuals with an SES of 4 are separate from individuals with an SES of 3, 2, and 1 (nearly the same separation exists for QoL, due to its high correlation with SES).

@@ -401,49 +401,4888 @@ Var of % of VAP in Rural Areas
 data %&gt;% group_by(state) %&gt;% summarize_at(c(&quot;cvap&quot;, &quot;rep_pres&quot;, 
     &quot;dem_pres&quot;, &quot;other_pres&quot;, &quot;total_votes&quot;), sum) %&gt;% mutate(turnout = round((total_votes/cvap) * 
     100)) %&gt;% mutate(winner_pres = ifelse(rep_pres &gt; dem_pres, 
-    &quot;Trump&quot;, &quot;Clinton&quot;)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
-    col.names = c(&quot;State&quot;, &quot;Voting Age Population&quot;, &quot;Votes for Trump&quot;, 
-        &quot;Votes for Clinton&quot;, &quot;Votes for 3rd Party&quot;, &quot;Total Votes&quot;, 
-        &quot;% Turnout&quot;, &quot;Winner&quot;), caption = &quot;2016 State Voting Stats&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
-    width = &quot;3.5cm&quot;)</code></pre>
-
+    &quot;Trump&quot;, &quot;Clinton&quot;)) %&gt;% kable(booktabs = T, col.names = c(&quot;State&quot;, 
+    &quot;Voting Age Population&quot;, &quot;Votes for Trump&quot;, &quot;Votes for Clinton&quot;, 
+    &quot;Votes for 3rd Party&quot;, &quot;Total Votes&quot;, &quot;% Turnout&quot;, &quot;Winner&quot;), 
+    caption = &quot;2016 State Voting Stats&quot;) %&gt;% kable_styling(full_width = F, 
+    bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, 
+        &quot;responsive&quot;)) %&gt;% column_spec(1, width = &quot;3.5cm&quot;)</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">Table 2: </span>2016 State Voting Stats
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+Voting Age Population
+</th>
+<th style="text-align:right;">
+Votes for Trump
+</th>
+<th style="text-align:right;">
+Votes for Clinton
+</th>
+<th style="text-align:right;">
+Votes for 3rd Party
+</th>
+<th style="text-align:right;">
+Total Votes
+</th>
+<th style="text-align:right;">
+% Turnout
+</th>
+<th style="text-align:left;">
+Winner
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Alabama
+</td>
+<td style="text-align:right;">
+3639505
+</td>
+<td style="text-align:right;">
+1318250
+</td>
+<td style="text-align:right;">
+729547
+</td>
+<td style="text-align:right;">
+75570
+</td>
+<td style="text-align:right;">
+2123367
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arizona
+</td>
+<td style="text-align:right;">
+4613575
+</td>
+<td style="text-align:right;">
+1252401
+</td>
+<td style="text-align:right;">
+1161167
+</td>
+<td style="text-align:right;">
+215188
+</td>
+<td style="text-align:right;">
+2628756
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arkansas
+</td>
+<td style="text-align:right;">
+2175330
+</td>
+<td style="text-align:right;">
+684872
+</td>
+<td style="text-align:right;">
+380494
+</td>
+<td style="text-align:right;">
+64530
+</td>
+<td style="text-align:right;">
+1129896
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+California
+</td>
+<td style="text-align:right;">
+24582600
+</td>
+<td style="text-align:right;">
+4483810
+</td>
+<td style="text-align:right;">
+8753788
+</td>
+<td style="text-align:right;">
+943997
+</td>
+<td style="text-align:right;">
+14181595
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Colorado
+</td>
+<td style="text-align:right;">
+3824445
+</td>
+<td style="text-align:right;">
+1202484
+</td>
+<td style="text-align:right;">
+1338870
+</td>
+<td style="text-align:right;">
+238866
+</td>
+<td style="text-align:right;">
+2780220
+</td>
+<td style="text-align:right;">
+73
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Connecticut
+</td>
+<td style="text-align:right;">
+2582880
+</td>
+<td style="text-align:right;">
+673215
+</td>
+<td style="text-align:right;">
+897572
+</td>
+<td style="text-align:right;">
+74133
+</td>
+<td style="text-align:right;">
+1644920
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Delaware
+</td>
+<td style="text-align:right;">
+689655
+</td>
+<td style="text-align:right;">
+185127
+</td>
+<td style="text-align:right;">
+235603
+</td>
+<td style="text-align:right;">
+22267
+</td>
+<td style="text-align:right;">
+442997
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+District of Columbia
+</td>
+<td style="text-align:right;">
+494090
+</td>
+<td style="text-align:right;">
+12723
+</td>
+<td style="text-align:right;">
+282830
+</td>
+<td style="text-align:right;">
+15715
+</td>
+<td style="text-align:right;">
+311268
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Florida
+</td>
+<td style="text-align:right;">
+14172385
+</td>
+<td style="text-align:right;">
+4611108
+</td>
+<td style="text-align:right;">
+4501194
+</td>
+<td style="text-align:right;">
+296919
+</td>
+<td style="text-align:right;">
+9409221
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Georgia
+</td>
+<td style="text-align:right;">
+7063795
+</td>
+<td style="text-align:right;">
+2089104
+</td>
+<td style="text-align:right;">
+1877963
+</td>
+<td style="text-align:right;">
+147644
+</td>
+<td style="text-align:right;">
+4114711
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Hawaii
+</td>
+<td style="text-align:right;">
+1006640
+</td>
+<td style="text-align:right;">
+128847
+</td>
+<td style="text-align:right;">
+266891
+</td>
+<td style="text-align:right;">
+33199
+</td>
+<td style="text-align:right;">
+428937
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Idaho
+</td>
+<td style="text-align:right;">
+1148900
+</td>
+<td style="text-align:right;">
+409055
+</td>
+<td style="text-align:right;">
+189765
+</td>
+<td style="text-align:right;">
+91613
+</td>
+<td style="text-align:right;">
+690433
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Illinois
+</td>
+<td style="text-align:right;">
+9003485
+</td>
+<td style="text-align:right;">
+2146015
+</td>
+<td style="text-align:right;">
+3090729
+</td>
+<td style="text-align:right;">
+321963
+</td>
+<td style="text-align:right;">
+5558707
+</td>
+<td style="text-align:right;">
+62
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Indiana
+</td>
+<td style="text-align:right;">
+4824565
+</td>
+<td style="text-align:right;">
+1557286
+</td>
+<td style="text-align:right;">
+1033126
+</td>
+<td style="text-align:right;">
+144546
+</td>
+<td style="text-align:right;">
+2734958
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Iowa
+</td>
+<td style="text-align:right;">
+2295045
+</td>
+<td style="text-align:right;">
+800983
+</td>
+<td style="text-align:right;">
+653669
+</td>
+<td style="text-align:right;">
+111379
+</td>
+<td style="text-align:right;">
+1566031
+</td>
+<td style="text-align:right;">
+68
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kansas
+</td>
+<td style="text-align:right;">
+2061765
+</td>
+<td style="text-align:right;">
+671018
+</td>
+<td style="text-align:right;">
+427005
+</td>
+<td style="text-align:right;">
+86380
+</td>
+<td style="text-align:right;">
+1184403
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kentucky
+</td>
+<td style="text-align:right;">
+3313780
+</td>
+<td style="text-align:right;">
+1202971
+</td>
+<td style="text-align:right;">
+628854
+</td>
+<td style="text-align:right;">
+92324
+</td>
+<td style="text-align:right;">
+1924149
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Louisiana
+</td>
+<td style="text-align:right;">
+3432025
+</td>
+<td style="text-align:right;">
+1178638
+</td>
+<td style="text-align:right;">
+780154
+</td>
+<td style="text-align:right;">
+70240
+</td>
+<td style="text-align:right;">
+2029032
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maine
+</td>
+<td style="text-align:right;">
+1051865
+</td>
+<td style="text-align:right;">
+334945
+</td>
+<td style="text-align:right;">
+354718
+</td>
+<td style="text-align:right;">
+54278
+</td>
+<td style="text-align:right;">
+743941
+</td>
+<td style="text-align:right;">
+71
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maryland
+</td>
+<td style="text-align:right;">
+4212250
+</td>
+<td style="text-align:right;">
+943169
+</td>
+<td style="text-align:right;">
+1677928
+</td>
+<td style="text-align:right;">
+160349
+</td>
+<td style="text-align:right;">
+2781446
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Massachusetts
+</td>
+<td style="text-align:right;">
+4887320
+</td>
+<td style="text-align:right;">
+1090893
+</td>
+<td style="text-align:right;">
+1995196
+</td>
+<td style="text-align:right;">
+188466
+</td>
+<td style="text-align:right;">
+3274555
+</td>
+<td style="text-align:right;">
+67
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Michigan
+</td>
+<td style="text-align:right;">
+7408635
+</td>
+<td style="text-align:right;">
+2279543
+</td>
+<td style="text-align:right;">
+2268839
+</td>
+<td style="text-align:right;">
+250902
+</td>
+<td style="text-align:right;">
+4799284
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Minnesota
+</td>
+<td style="text-align:right;">
+3814925
+</td>
+<td style="text-align:right;">
+1276028
+</td>
+<td style="text-align:right;">
+1308640
+</td>
+<td style="text-align:right;">
+243863
+</td>
+<td style="text-align:right;">
+2828531
+</td>
+<td style="text-align:right;">
+74
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Mississippi
+</td>
+<td style="text-align:right;">
+2217760
+</td>
+<td style="text-align:right;">
+700714
+</td>
+<td style="text-align:right;">
+485131
+</td>
+<td style="text-align:right;">
+23512
+</td>
+<td style="text-align:right;">
+1209357
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Missouri
+</td>
+<td style="text-align:right;">
+3801425
+</td>
+<td style="text-align:right;">
+1367423
+</td>
+<td style="text-align:right;">
+686629
+</td>
+<td style="text-align:right;">
+109870
+</td>
+<td style="text-align:right;">
+2163922
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Montana
+</td>
+<td style="text-align:right;">
+789490
+</td>
+<td style="text-align:right;">
+279240
+</td>
+<td style="text-align:right;">
+177709
+</td>
+<td style="text-align:right;">
+40198
+</td>
+<td style="text-align:right;">
+497147
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nebraska
+</td>
+<td style="text-align:right;">
+1341015
+</td>
+<td style="text-align:right;">
+495961
+</td>
+<td style="text-align:right;">
+284454
+</td>
+<td style="text-align:right;">
+63772
+</td>
+<td style="text-align:right;">
+844187
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nevada
+</td>
+<td style="text-align:right;">
+1902290
+</td>
+<td style="text-align:right;">
+512058
+</td>
+<td style="text-align:right;">
+539260
+</td>
+<td style="text-align:right;">
+74067
+</td>
+<td style="text-align:right;">
+1125385
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Hampshire
+</td>
+<td style="text-align:right;">
+1027635
+</td>
+<td style="text-align:right;">
+345790
+</td>
+<td style="text-align:right;">
+348526
+</td>
+<td style="text-align:right;">
+49980
+</td>
+<td style="text-align:right;">
+744296
+</td>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Jersey
+</td>
+<td style="text-align:right;">
+6087275
+</td>
+<td style="text-align:right;">
+1601933
+</td>
+<td style="text-align:right;">
+2148278
+</td>
+<td style="text-align:right;">
+123835
+</td>
+<td style="text-align:right;">
+3874046
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Mexico
+</td>
+<td style="text-align:right;">
+1464245
+</td>
+<td style="text-align:right;">
+319667
+</td>
+<td style="text-align:right;">
+385234
+</td>
+<td style="text-align:right;">
+93418
+</td>
+<td style="text-align:right;">
+798319
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New York
+</td>
+<td style="text-align:right;">
+13605855
+</td>
+<td style="text-align:right;">
+2814589
+</td>
+<td style="text-align:right;">
+4547562
+</td>
+<td style="text-align:right;">
+345212
+</td>
+<td style="text-align:right;">
+7707363
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Carolina
+</td>
+<td style="text-align:right;">
+7203800
+</td>
+<td style="text-align:right;">
+2362631
+</td>
+<td style="text-align:right;">
+2189316
+</td>
+<td style="text-align:right;">
+189617
+</td>
+<td style="text-align:right;">
+4741564
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Dakota
+</td>
+<td style="text-align:right;">
+555685
+</td>
+<td style="text-align:right;">
+216794
+</td>
+<td style="text-align:right;">
+93758
+</td>
+<td style="text-align:right;">
+33808
+</td>
+<td style="text-align:right;">
+344360
+</td>
+<td style="text-align:right;">
+62
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Ohio
+</td>
+<td style="text-align:right;">
+8734140
+</td>
+<td style="text-align:right;">
+2841005
+</td>
+<td style="text-align:right;">
+2394164
+</td>
+<td style="text-align:right;">
+261318
+</td>
+<td style="text-align:right;">
+5496487
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oklahoma
+</td>
+<td style="text-align:right;">
+2787660
+</td>
+<td style="text-align:right;">
+949136
+</td>
+<td style="text-align:right;">
+420375
+</td>
+<td style="text-align:right;">
+83481
+</td>
+<td style="text-align:right;">
+1452992
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oregon
+</td>
+<td style="text-align:right;">
+2911325
+</td>
+<td style="text-align:right;">
+782403
+</td>
+<td style="text-align:right;">
+1002106
+</td>
+<td style="text-align:right;">
+216827
+</td>
+<td style="text-align:right;">
+2001336
+</td>
+<td style="text-align:right;">
+69
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+9725830
+</td>
+<td style="text-align:right;">
+2970733
+</td>
+<td style="text-align:right;">
+2926441
+</td>
+<td style="text-align:right;">
+218228
+</td>
+<td style="text-align:right;">
+6115402
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Rhode Island
+</td>
+<td style="text-align:right;">
+780250
+</td>
+<td style="text-align:right;">
+180490
+</td>
+<td style="text-align:right;">
+251888
+</td>
+<td style="text-align:right;">
+31038
+</td>
+<td style="text-align:right;">
+463416
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Carolina
+</td>
+<td style="text-align:right;">
+3620835
+</td>
+<td style="text-align:right;">
+1155389
+</td>
+<td style="text-align:right;">
+855373
+</td>
+<td style="text-align:right;">
+92265
+</td>
+<td style="text-align:right;">
+2103027
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Dakota
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+227721
+</td>
+<td style="text-align:right;">
+117458
+</td>
+<td style="text-align:right;">
+24914
+</td>
+<td style="text-align:right;">
+370093
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Tennessee
+</td>
+<td style="text-align:right;">
+4876600
+</td>
+<td style="text-align:right;">
+1522925
+</td>
+<td style="text-align:right;">
+870695
+</td>
+<td style="text-align:right;">
+114407
+</td>
+<td style="text-align:right;">
+2508027
+</td>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Texas
+</td>
+<td style="text-align:right;">
+17162060
+</td>
+<td style="text-align:right;">
+4679528
+</td>
+<td style="text-align:right;">
+3876705
+</td>
+<td style="text-align:right;">
+406149
+</td>
+<td style="text-align:right;">
+8962382
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Utah
+</td>
+<td style="text-align:right;">
+1903500
+</td>
+<td style="text-align:right;">
+515231
+</td>
+<td style="text-align:right;">
+310676
+</td>
+<td style="text-align:right;">
+305523
+</td>
+<td style="text-align:right;">
+1131430
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Vermont
+</td>
+<td style="text-align:right;">
+493535
+</td>
+<td style="text-align:right;">
+95369
+</td>
+<td style="text-align:right;">
+178573
+</td>
+<td style="text-align:right;">
+41135
+</td>
+<td style="text-align:right;">
+315077
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Virginia
+</td>
+<td style="text-align:right;">
+4121785
+</td>
+<td style="text-align:right;">
+1368789
+</td>
+<td style="text-align:right;">
+1334904
+</td>
+<td style="text-align:right;">
+165549
+</td>
+<td style="text-align:right;">
+2869242
+</td>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Washington
+</td>
+<td style="text-align:right;">
+5008030
+</td>
+<td style="text-align:right;">
+1221747
+</td>
+<td style="text-align:right;">
+1742718
+</td>
+<td style="text-align:right;">
+244749
+</td>
+<td style="text-align:right;">
+3209214
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:left;">
+Clinton
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+West Virginia
+</td>
+<td style="text-align:right;">
+1453210
+</td>
+<td style="text-align:right;">
+489371
+</td>
+<td style="text-align:right;">
+188794
+</td>
+<td style="text-align:right;">
+34886
+</td>
+<td style="text-align:right;">
+713051
+</td>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wisconsin
+</td>
+<td style="text-align:right;">
+4313285
+</td>
+<td style="text-align:right;">
+1404440
+</td>
+<td style="text-align:right;">
+1381823
+</td>
+<td style="text-align:right;">
+189490
+</td>
+<td style="text-align:right;">
+2975753
+</td>
+<td style="text-align:right;">
+69
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wyoming
+</td>
+<td style="text-align:right;">
+432375
+</td>
+<td style="text-align:right;">
+174419
+</td>
+<td style="text-align:right;">
+55973
+</td>
+<td style="text-align:right;">
+25457
+</td>
+<td style="text-align:right;">
+255849
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:left;">
+Trump
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code># state mean
 data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
-    &quot;pct_65&quot;, &quot;pct_rural&quot;), mean, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
-    booktabs = T, col.names = c(&quot;State&quot;, &quot;Mean Voting Age Population (VAP)&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), mean, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;State&quot;, &quot;Mean Voting Age Population (VAP)&quot;, 
         &quot;Mean % of VAP under 29&quot;, &quot;Mean % of VAP over 65&quot;, 
         &quot;Mean % of VAP in Rural Areas &quot;), caption = &quot;2016 County Population Means by State&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;% column_spec(1, 
     width = &quot;3.5cm&quot;)</code></pre>
-
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">Table 2: </span>2016 County Population Means by State
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+Mean Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+Mean % of VAP under 29
+</th>
+<th style="text-align:right;">
+Mean % of VAP over 65
+</th>
+<th style="text-align:right;">
+Mean % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Alabama
+</td>
+<td style="text-align:right;">
+54320.97
+</td>
+<td style="text-align:right;">
+37.86408
+</td>
+<td style="text-align:right;">
+16.93007
+</td>
+<td style="text-align:right;">
+67.08605
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arizona
+</td>
+<td style="text-align:right;">
+307571.67
+</td>
+<td style="text-align:right;">
+39.68783
+</td>
+<td style="text-align:right;">
+18.95175
+</td>
+<td style="text-align:right;">
+34.10852
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arkansas
+</td>
+<td style="text-align:right;">
+29004.40
+</td>
+<td style="text-align:right;">
+37.33350
+</td>
+<td style="text-align:right;">
+18.25900
+</td>
+<td style="text-align:right;">
+64.87069
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+California
+</td>
+<td style="text-align:right;">
+423837.93
+</td>
+<td style="text-align:right;">
+38.68123
+</td>
+<td style="text-align:right;">
+15.96278
+</td>
+<td style="text-align:right;">
+28.69574
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Colorado
+</td>
+<td style="text-align:right;">
+59756.95
+</td>
+<td style="text-align:right;">
+35.15412
+</td>
+<td style="text-align:right;">
+17.29424
+</td>
+<td style="text-align:right;">
+58.67793
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Connecticut
+</td>
+<td style="text-align:right;">
+322860.00
+</td>
+<td style="text-align:right;">
+36.92283
+</td>
+<td style="text-align:right;">
+15.78773
+</td>
+<td style="text-align:right;">
+24.17482
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Delaware
+</td>
+<td style="text-align:right;">
+229885.00
+</td>
+<td style="text-align:right;">
+37.61358
+</td>
+<td style="text-align:right;">
+17.83362
+</td>
+<td style="text-align:right;">
+24.29180
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+District of Columbia
+</td>
+<td style="text-align:right;">
+494090.00
+</td>
+<td style="text-align:right;">
+41.59822
+</td>
+<td style="text-align:right;">
+11.40591
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Florida
+</td>
+<td style="text-align:right;">
+214733.11
+</td>
+<td style="text-align:right;">
+34.75624
+</td>
+<td style="text-align:right;">
+20.32395
+</td>
+<td style="text-align:right;">
+37.36875
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Georgia
+</td>
+<td style="text-align:right;">
+44426.38
+</td>
+<td style="text-align:right;">
+39.18777
+</td>
+<td style="text-align:right;">
+15.63505
+</td>
+<td style="text-align:right;">
+60.48895
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Hawaii
+</td>
+<td style="text-align:right;">
+251660.00
+</td>
+<td style="text-align:right;">
+36.75521
+</td>
+<td style="text-align:right;">
+16.52035
+</td>
+<td style="text-align:right;">
+16.57042
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Idaho
+</td>
+<td style="text-align:right;">
+26111.36
+</td>
+<td style="text-align:right;">
+39.65181
+</td>
+<td style="text-align:right;">
+17.09669
+</td>
+<td style="text-align:right;">
+61.46655
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Illinois
+</td>
+<td style="text-align:right;">
+88269.46
+</td>
+<td style="text-align:right;">
+36.59774
+</td>
+<td style="text-align:right;">
+17.78597
+</td>
+<td style="text-align:right;">
+51.08966
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Indiana
+</td>
+<td style="text-align:right;">
+52440.92
+</td>
+<td style="text-align:right;">
+38.21936
+</td>
+<td style="text-align:right;">
+16.15061
+</td>
+<td style="text-align:right;">
+54.45413
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Iowa
+</td>
+<td style="text-align:right;">
+23182.27
+</td>
+<td style="text-align:right;">
+36.84665
+</td>
+<td style="text-align:right;">
+18.91432
+</td>
+<td style="text-align:right;">
+61.32415
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kansas
+</td>
+<td style="text-align:right;">
+19635.86
+</td>
+<td style="text-align:right;">
+37.88169
+</td>
+<td style="text-align:right;">
+18.93400
+</td>
+<td style="text-align:right;">
+66.88777
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kentucky
+</td>
+<td style="text-align:right;">
+27614.83
+</td>
+<td style="text-align:right;">
+37.27817
+</td>
+<td style="text-align:right;">
+16.27599
+</td>
+<td style="text-align:right;">
+71.64717
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Louisiana
+</td>
+<td style="text-align:right;">
+53625.39
+</td>
+<td style="text-align:right;">
+40.36534
+</td>
+<td style="text-align:right;">
+14.67173
+</td>
+<td style="text-align:right;">
+51.08987
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maine
+</td>
+<td style="text-align:right;">
+65741.56
+</td>
+<td style="text-align:right;">
+32.44411
+</td>
+<td style="text-align:right;">
+19.74606
+</td>
+<td style="text-align:right;">
+74.19263
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maryland
+</td>
+<td style="text-align:right;">
+175510.42
+</td>
+<td style="text-align:right;">
+37.62934
+</td>
+<td style="text-align:right;">
+15.98360
+</td>
+<td style="text-align:right;">
+34.59828
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Massachusetts
+</td>
+<td style="text-align:right;">
+349094.29
+</td>
+<td style="text-align:right;">
+36.36956
+</td>
+<td style="text-align:right;">
+16.68975
+</td>
+<td style="text-align:right;">
+16.75449
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Michigan
+</td>
+<td style="text-align:right;">
+89260.66
+</td>
+<td style="text-align:right;">
+34.60295
+</td>
+<td style="text-align:right;">
+19.70429
+</td>
+<td style="text-align:right;">
+61.64197
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Minnesota
+</td>
+<td style="text-align:right;">
+44881.47
+</td>
+<td style="text-align:right;">
+36.82955
+</td>
+<td style="text-align:right;">
+18.33682
+</td>
+<td style="text-align:right;">
+61.17299
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Mississippi
+</td>
+<td style="text-align:right;">
+27045.85
+</td>
+<td style="text-align:right;">
+40.23474
+</td>
+<td style="text-align:right;">
+15.44554
+</td>
+<td style="text-align:right;">
+70.62729
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Missouri
+</td>
+<td style="text-align:right;">
+33345.83
+</td>
+<td style="text-align:right;">
+37.42801
+</td>
+<td style="text-align:right;">
+18.20436
+</td>
+<td style="text-align:right;">
+67.37911
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Montana
+</td>
+<td style="text-align:right;">
+14098.04
+</td>
+<td style="text-align:right;">
+34.49194
+</td>
+<td style="text-align:right;">
+19.94553
+</td>
+<td style="text-align:right;">
+75.12265
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nebraska
+</td>
+<td style="text-align:right;">
+14419.52
+</td>
+<td style="text-align:right;">
+35.88972
+</td>
+<td style="text-align:right;">
+20.33453
+</td>
+<td style="text-align:right;">
+74.64880
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nevada
+</td>
+<td style="text-align:right;">
+111899.41
+</td>
+<td style="text-align:right;">
+35.17387
+</td>
+<td style="text-align:right;">
+18.36312
+</td>
+<td style="text-align:right;">
+49.50297
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Hampshire
+</td>
+<td style="text-align:right;">
+102763.50
+</td>
+<td style="text-align:right;">
+34.24373
+</td>
+<td style="text-align:right;">
+17.80252
+</td>
+<td style="text-align:right;">
+55.37205
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Jersey
+</td>
+<td style="text-align:right;">
+289870.24
+</td>
+<td style="text-align:right;">
+37.25410
+</td>
+<td style="text-align:right;">
+15.26856
+</td>
+<td style="text-align:right;">
+12.76092
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Mexico
+</td>
+<td style="text-align:right;">
+44371.06
+</td>
+<td style="text-align:right;">
+37.29745
+</td>
+<td style="text-align:right;">
+18.95355
+</td>
+<td style="text-align:right;">
+48.42408
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New York
+</td>
+<td style="text-align:right;">
+219449.27
+</td>
+<td style="text-align:right;">
+37.40685
+</td>
+<td style="text-align:right;">
+16.62217
+</td>
+<td style="text-align:right;">
+44.29117
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Carolina
+</td>
+<td style="text-align:right;">
+72038.00
+</td>
+<td style="text-align:right;">
+36.24397
+</td>
+<td style="text-align:right;">
+17.97262
+</td>
+<td style="text-align:right;">
+61.20367
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Dakota
+</td>
+<td style="text-align:right;">
+10484.62
+</td>
+<td style="text-align:right;">
+36.18419
+</td>
+<td style="text-align:right;">
+19.72416
+</td>
+<td style="text-align:right;">
+82.55919
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Ohio
+</td>
+<td style="text-align:right;">
+99251.59
+</td>
+<td style="text-align:right;">
+37.64550
+</td>
+<td style="text-align:right;">
+16.57254
+</td>
+<td style="text-align:right;">
+48.22399
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oklahoma
+</td>
+<td style="text-align:right;">
+36203.38
+</td>
+<td style="text-align:right;">
+39.03905
+</td>
+<td style="text-align:right;">
+17.09322
+</td>
+<td style="text-align:right;">
+63.63594
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oregon
+</td>
+<td style="text-align:right;">
+80870.14
+</td>
+<td style="text-align:right;">
+34.95312
+</td>
+<td style="text-align:right;">
+20.18139
+</td>
+<td style="text-align:right;">
+44.37082
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+145161.64
+</td>
+<td style="text-align:right;">
+35.41506
+</td>
+<td style="text-align:right;">
+18.44787
+</td>
+<td style="text-align:right;">
+47.42721
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Rhode Island
+</td>
+<td style="text-align:right;">
+156050.00
+</td>
+<td style="text-align:right;">
+36.10122
+</td>
+<td style="text-align:right;">
+17.54390
+</td>
+<td style="text-align:right;">
+11.51070
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Carolina
+</td>
+<td style="text-align:right;">
+78713.80
+</td>
+<td style="text-align:right;">
+37.53976
+</td>
+<td style="text-align:right;">
+17.09953
+</td>
+<td style="text-align:right;">
+54.97615
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Dakota
+</td>
+<td style="text-align:right;">
+9511.00
+</td>
+<td style="text-align:right;">
+38.54353
+</td>
+<td style="text-align:right;">
+18.46681
+</td>
+<td style="text-align:right;">
+78.17372
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Tennessee
+</td>
+<td style="text-align:right;">
+51332.63
+</td>
+<td style="text-align:right;">
+36.04763
+</td>
+<td style="text-align:right;">
+17.83848
+</td>
+<td style="text-align:right;">
+66.43504
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Texas
+</td>
+<td style="text-align:right;">
+67834.23
+</td>
+<td style="text-align:right;">
+39.65251
+</td>
+<td style="text-align:right;">
+17.03346
+</td>
+<td style="text-align:right;">
+55.54355
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Utah
+</td>
+<td style="text-align:right;">
+65637.93
+</td>
+<td style="text-align:right;">
+45.21525
+</td>
+<td style="text-align:right;">
+13.66190
+</td>
+<td style="text-align:right;">
+48.35427
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Vermont
+</td>
+<td style="text-align:right;">
+35252.50
+</td>
+<td style="text-align:right;">
+34.05567
+</td>
+<td style="text-align:right;">
+18.07357
+</td>
+<td style="text-align:right;">
+75.37298
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Virginia
+</td>
+<td style="text-align:right;">
+43387.21
+</td>
+<td style="text-align:right;">
+33.96967
+</td>
+<td style="text-align:right;">
+18.87252
+</td>
+<td style="text-align:right;">
+72.39513
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Washington
+</td>
+<td style="text-align:right;">
+128411.03
+</td>
+<td style="text-align:right;">
+37.02797
+</td>
+<td style="text-align:right;">
+18.63795
+</td>
+<td style="text-align:right;">
+44.78657
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+West Virginia
+</td>
+<td style="text-align:right;">
+26422.00
+</td>
+<td style="text-align:right;">
+34.00806
+</td>
+<td style="text-align:right;">
+18.90901
+</td>
+<td style="text-align:right;">
+69.20295
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wisconsin
+</td>
+<td style="text-align:right;">
+59906.74
+</td>
+<td style="text-align:right;">
+35.25427
+</td>
+<td style="text-align:right;">
+18.35244
+</td>
+<td style="text-align:right;">
+60.11378
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wyoming
+</td>
+<td style="text-align:right;">
+18798.91
+</td>
+<td style="text-align:right;">
+38.04636
+</td>
+<td style="text-align:right;">
+15.92423
+</td>
+<td style="text-align:right;">
+50.53032
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code># state median
 data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
-    &quot;pct_65&quot;, &quot;pct_rural&quot;), median, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
-    booktabs = T, col.names = c(&quot;State&quot;, &quot;Median Voting Age Population (VAP)&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), median, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;State&quot;, &quot;Median Voting Age Population (VAP)&quot;, 
         &quot;Median % of VAP under 29&quot;, &quot;Median % of VAP over 65&quot;, 
         &quot;Median % of VAP in Rural Areas &quot;), caption = &quot;2016 County Population Medians by State&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;% column_spec(1, 
     width = &quot;3.5cm&quot;)</code></pre>
-
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">Table 2: </span>2016 County Population Medians by State
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+Median Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+Median % of VAP under 29
+</th>
+<th style="text-align:right;">
+Median % of VAP over 65
+</th>
+<th style="text-align:right;">
+Median % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Alabama
+</td>
+<td style="text-align:right;">
+26480.0
+</td>
+<td style="text-align:right;">
+37.51620
+</td>
+<td style="text-align:right;">
+17.34027
+</td>
+<td style="text-align:right;">
+71.232157
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arizona
+</td>
+<td style="text-align:right;">
+92915.0
+</td>
+<td style="text-align:right;">
+41.88662
+</td>
+<td style="text-align:right;">
+17.38976
+</td>
+<td style="text-align:right;">
+33.197178
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arkansas
+</td>
+<td style="text-align:right;">
+14380.0
+</td>
+<td style="text-align:right;">
+36.77072
+</td>
+<td style="text-align:right;">
+17.75001
+</td>
+<td style="text-align:right;">
+65.060844
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+California
+</td>
+<td style="text-align:right;">
+136797.5
+</td>
+<td style="text-align:right;">
+39.42552
+</td>
+<td style="text-align:right;">
+14.29314
+</td>
+<td style="text-align:right;">
+16.038159
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Colorado
+</td>
+<td style="text-align:right;">
+11287.5
+</td>
+<td style="text-align:right;">
+35.32269
+</td>
+<td style="text-align:right;">
+16.65430
+</td>
+<td style="text-align:right;">
+58.991724
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Connecticut
+</td>
+<td style="text-align:right;">
+175870.0
+</td>
+<td style="text-align:right;">
+37.38953
+</td>
+<td style="text-align:right;">
+15.62468
+</td>
+<td style="text-align:right;">
+25.174195
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Delaware
+</td>
+<td style="text-align:right;">
+162020.0
+</td>
+<td style="text-align:right;">
+39.80656
+</td>
+<td style="text-align:right;">
+15.49798
+</td>
+<td style="text-align:right;">
+26.969380
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+District of Columbia
+</td>
+<td style="text-align:right;">
+494090.0
+</td>
+<td style="text-align:right;">
+41.59822
+</td>
+<td style="text-align:right;">
+11.40591
+</td>
+<td style="text-align:right;">
+0.000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Florida
+</td>
+<td style="text-align:right;">
+108192.5
+</td>
+<td style="text-align:right;">
+35.11170
+</td>
+<td style="text-align:right;">
+18.42453
+</td>
+<td style="text-align:right;">
+22.483489
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Georgia
+</td>
+<td style="text-align:right;">
+16910.0
+</td>
+<td style="text-align:right;">
+39.13165
+</td>
+<td style="text-align:right;">
+15.53581
+</td>
+<td style="text-align:right;">
+64.709583
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Hawaii
+</td>
+<td style="text-align:right;">
+127597.5
+</td>
+<td style="text-align:right;">
+35.97454
+</td>
+<td style="text-align:right;">
+16.61758
+</td>
+<td style="text-align:right;">
+13.714002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Idaho
+</td>
+<td style="text-align:right;">
+9055.0
+</td>
+<td style="text-align:right;">
+40.22447
+</td>
+<td style="text-align:right;">
+16.64454
+</td>
+<td style="text-align:right;">
+59.250005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Illinois
+</td>
+<td style="text-align:right;">
+20507.5
+</td>
+<td style="text-align:right;">
+35.96429
+</td>
+<td style="text-align:right;">
+18.23888
+</td>
+<td style="text-align:right;">
+50.392053
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Indiana
+</td>
+<td style="text-align:right;">
+25330.0
+</td>
+<td style="text-align:right;">
+37.49938
+</td>
+<td style="text-align:right;">
+16.24208
+</td>
+<td style="text-align:right;">
+53.646716
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Iowa
+</td>
+<td style="text-align:right;">
+11455.0
+</td>
+<td style="text-align:right;">
+35.82959
+</td>
+<td style="text-align:right;">
+19.25142
+</td>
+<td style="text-align:right;">
+58.980813
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kansas
+</td>
+<td style="text-align:right;">
+5405.0
+</td>
+<td style="text-align:right;">
+37.05403
+</td>
+<td style="text-align:right;">
+19.16197
+</td>
+<td style="text-align:right;">
+70.195091
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kentucky
+</td>
+<td style="text-align:right;">
+14335.0
+</td>
+<td style="text-align:right;">
+36.80475
+</td>
+<td style="text-align:right;">
+16.23112
+</td>
+<td style="text-align:right;">
+76.038763
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Louisiana
+</td>
+<td style="text-align:right;">
+25015.0
+</td>
+<td style="text-align:right;">
+40.19755
+</td>
+<td style="text-align:right;">
+14.82697
+</td>
+<td style="text-align:right;">
+50.044038
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maine
+</td>
+<td style="text-align:right;">
+42310.0
+</td>
+<td style="text-align:right;">
+31.96742
+</td>
+<td style="text-align:right;">
+19.41523
+</td>
+<td style="text-align:right;">
+80.370874
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maryland
+</td>
+<td style="text-align:right;">
+79022.5
+</td>
+<td style="text-align:right;">
+38.17246
+</td>
+<td style="text-align:right;">
+14.85169
+</td>
+<td style="text-align:right;">
+32.515300
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Massachusetts
+</td>
+<td style="text-align:right;">
+362165.0
+</td>
+<td style="text-align:right;">
+36.75348
+</td>
+<td style="text-align:right;">
+15.63826
+</td>
+<td style="text-align:right;">
+10.071024
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Michigan
+</td>
+<td style="text-align:right;">
+30460.0
+</td>
+<td style="text-align:right;">
+35.35205
+</td>
+<td style="text-align:right;">
+18.34154
+</td>
+<td style="text-align:right;">
+64.334762
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Minnesota
+</td>
+<td style="text-align:right;">
+16385.0
+</td>
+<td style="text-align:right;">
+36.52764
+</td>
+<td style="text-align:right;">
+18.67697
+</td>
+<td style="text-align:right;">
+62.159333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Mississippi
+</td>
+<td style="text-align:right;">
+16707.5
+</td>
+<td style="text-align:right;">
+40.00795
+</td>
+<td style="text-align:right;">
+15.38074
+</td>
+<td style="text-align:right;">
+75.736249
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Missouri
+</td>
+<td style="text-align:right;">
+14112.5
+</td>
+<td style="text-align:right;">
+37.16142
+</td>
+<td style="text-align:right;">
+17.84735
+</td>
+<td style="text-align:right;">
+69.330472
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Montana
+</td>
+<td style="text-align:right;">
+5852.5
+</td>
+<td style="text-align:right;">
+33.73737
+</td>
+<td style="text-align:right;">
+20.37518
+</td>
+<td style="text-align:right;">
+100.000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nebraska
+</td>
+<td style="text-align:right;">
+4490.0
+</td>
+<td style="text-align:right;">
+34.93064
+</td>
+<td style="text-align:right;">
+20.51566
+</td>
+<td style="text-align:right;">
+100.000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nevada
+</td>
+<td style="text-align:right;">
+11430.0
+</td>
+<td style="text-align:right;">
+35.18893
+</td>
+<td style="text-align:right;">
+17.47557
+</td>
+<td style="text-align:right;">
+37.850793
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Hampshire
+</td>
+<td style="text-align:right;">
+66367.5
+</td>
+<td style="text-align:right;">
+34.70415
+</td>
+<td style="text-align:right;">
+17.62548
+</td>
+<td style="text-align:right;">
+64.589043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Jersey
+</td>
+<td style="text-align:right;">
+325420.0
+</td>
+<td style="text-align:right;">
+36.61591
+</td>
+<td style="text-align:right;">
+14.73385
+</td>
+<td style="text-align:right;">
+5.792656
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Mexico
+</td>
+<td style="text-align:right;">
+19435.0
+</td>
+<td style="text-align:right;">
+38.61581
+</td>
+<td style="text-align:right;">
+17.96120
+</td>
+<td style="text-align:right;">
+42.352782
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New York
+</td>
+<td style="text-align:right;">
+69240.0
+</td>
+<td style="text-align:right;">
+37.20012
+</td>
+<td style="text-align:right;">
+16.57271
+</td>
+<td style="text-align:right;">
+49.211388
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Carolina
+</td>
+<td style="text-align:right;">
+40907.5
+</td>
+<td style="text-align:right;">
+35.09652
+</td>
+<td style="text-align:right;">
+17.57339
+</td>
+<td style="text-align:right;">
+62.279062
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Dakota
+</td>
+<td style="text-align:right;">
+3250.0
+</td>
+<td style="text-align:right;">
+34.58845
+</td>
+<td style="text-align:right;">
+20.62756
+</td>
+<td style="text-align:right;">
+100.000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Ohio
+</td>
+<td style="text-align:right;">
+43527.5
+</td>
+<td style="text-align:right;">
+37.26465
+</td>
+<td style="text-align:right;">
+16.59815
+</td>
+<td style="text-align:right;">
+49.908772
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oklahoma
+</td>
+<td style="text-align:right;">
+15970.0
+</td>
+<td style="text-align:right;">
+38.51379
+</td>
+<td style="text-align:right;">
+17.28418
+</td>
+<td style="text-align:right;">
+61.330630
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oregon
+</td>
+<td style="text-align:right;">
+33030.0
+</td>
+<td style="text-align:right;">
+34.88781
+</td>
+<td style="text-align:right;">
+19.24975
+</td>
+<td style="text-align:right;">
+39.989502
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+70165.0
+</td>
+<td style="text-align:right;">
+35.26945
+</td>
+<td style="text-align:right;">
+18.80041
+</td>
+<td style="text-align:right;">
+45.690402
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Rhode Island
+</td>
+<td style="text-align:right;">
+101750.0
+</td>
+<td style="text-align:right;">
+35.89421
+</td>
+<td style="text-align:right;">
+17.98067
+</td>
+<td style="text-align:right;">
+7.986374
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Carolina
+</td>
+<td style="text-align:right;">
+45007.5
+</td>
+<td style="text-align:right;">
+37.63598
+</td>
+<td style="text-align:right;">
+16.66172
+</td>
+<td style="text-align:right;">
+60.901000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Dakota
+</td>
+<td style="text-align:right;">
+3930.0
+</td>
+<td style="text-align:right;">
+37.64496
+</td>
+<td style="text-align:right;">
+19.09341
+</td>
+<td style="text-align:right;">
+100.000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Tennessee
+</td>
+<td style="text-align:right;">
+23715.0
+</td>
+<td style="text-align:right;">
+35.50665
+</td>
+<td style="text-align:right;">
+18.21758
+</td>
+<td style="text-align:right;">
+68.015342
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Texas
+</td>
+<td style="text-align:right;">
+12590.0
+</td>
+<td style="text-align:right;">
+39.75959
+</td>
+<td style="text-align:right;">
+16.02988
+</td>
+<td style="text-align:right;">
+53.653823
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Utah
+</td>
+<td style="text-align:right;">
+14290.0
+</td>
+<td style="text-align:right;">
+46.44335
+</td>
+<td style="text-align:right;">
+12.50776
+</td>
+<td style="text-align:right;">
+43.470623
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Vermont
+</td>
+<td style="text-align:right;">
+29242.5
+</td>
+<td style="text-align:right;">
+33.47856
+</td>
+<td style="text-align:right;">
+17.96952
+</td>
+<td style="text-align:right;">
+74.989623
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Virginia
+</td>
+<td style="text-align:right;">
+20200.0
+</td>
+<td style="text-align:right;">
+33.31641
+</td>
+<td style="text-align:right;">
+19.24274
+</td>
+<td style="text-align:right;">
+77.810371
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Washington
+</td>
+<td style="text-align:right;">
+44920.0
+</td>
+<td style="text-align:right;">
+36.72390
+</td>
+<td style="text-align:right;">
+17.95360
+</td>
+<td style="text-align:right;">
+35.453196
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+West Virginia
+</td>
+<td style="text-align:right;">
+18580.0
+</td>
+<td style="text-align:right;">
+33.47065
+</td>
+<td style="text-align:right;">
+18.90983
+</td>
+<td style="text-align:right;">
+70.750891
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wisconsin
+</td>
+<td style="text-align:right;">
+31955.0
+</td>
+<td style="text-align:right;">
+35.09502
+</td>
+<td style="text-align:right;">
+17.48072
+</td>
+<td style="text-align:right;">
+62.123958
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wyoming
+</td>
+<td style="text-align:right;">
+11335.0
+</td>
+<td style="text-align:right;">
+36.39354
+</td>
+<td style="text-align:right;">
+16.40980
+</td>
+<td style="text-align:right;">
+45.995924
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code># state sd
 data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
-    &quot;pct_65&quot;, &quot;pct_rural&quot;), sd, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
-    booktabs = T, col.names = c(&quot;State&quot;, &quot;SD Voting Age Population (VAP)&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), sd, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;State&quot;, &quot;SD Voting Age Population (VAP)&quot;, 
         &quot;SD % of VAP under 29&quot;, &quot;SD % of VAP over 65&quot;, &quot;SD % of VAP in Rural Areas &quot;), 
     caption = &quot;2016 County Population Standard Deviations by State&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;% column_spec(1, 
     width = &quot;3.5cm&quot;)</code></pre>
-
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">Table 2: </span>2016 County Population Standard Deviations by State
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+SD Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+SD % of VAP under 29
+</th>
+<th style="text-align:right;">
+SD % of VAP over 65
+</th>
+<th style="text-align:right;">
+SD % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Alabama
+</td>
+<td style="text-align:right;">
+78460.73
+</td>
+<td style="text-align:right;">
+3.353767
+</td>
+<td style="text-align:right;">
+2.325178
+</td>
+<td style="text-align:right;">
+26.38352
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arizona
+</td>
+<td style="text-align:right;">
+691575.29
+</td>
+<td style="text-align:right;">
+6.830604
+</td>
+<td style="text-align:right;">
+7.291281
+</td>
+<td style="text-align:right;">
+19.74815
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arkansas
+</td>
+<td style="text-align:right;">
+42307.69
+</td>
+<td style="text-align:right;">
+4.352276
+</td>
+<td style="text-align:right;">
+3.964330
+</td>
+<td style="text-align:right;">
+24.08010
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+California
+</td>
+<td style="text-align:right;">
+899051.54
+</td>
+<td style="text-align:right;">
+6.701339
+</td>
+<td style="text-align:right;">
+4.773067
+</td>
+<td style="text-align:right;">
+28.88916
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Colorado
+</td>
+<td style="text-align:right;">
+119595.80
+</td>
+<td style="text-align:right;">
+6.671142
+</td>
+<td style="text-align:right;">
+6.026393
+</td>
+<td style="text-align:right;">
+36.62727
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Connecticut
+</td>
+<td style="text-align:right;">
+257962.06
+</td>
+<td style="text-align:right;">
+3.210256
+</td>
+<td style="text-align:right;">
+1.598941
+</td>
+<td style="text-align:right;">
+18.16752
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Delaware
+</td>
+<td style="text-align:right;">
+149168.83
+</td>
+<td style="text-align:right;">
+5.134382
+</td>
+<td style="text-align:right;">
+5.591801
+</td>
+<td style="text-align:right;">
+18.49653
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+District of Columbia
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Florida
+</td>
+<td style="text-align:right;">
+310272.87
+</td>
+<td style="text-align:right;">
+5.872224
+</td>
+<td style="text-align:right;">
+7.540640
+</td>
+<td style="text-align:right;">
+32.48703
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Georgia
+</td>
+<td style="text-align:right;">
+90730.79
+</td>
+<td style="text-align:right;">
+5.132672
+</td>
+<td style="text-align:right;">
+4.072464
+</td>
+<td style="text-align:right;">
+28.96652
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Hawaii
+</td>
+<td style="text-align:right;">
+302333.05
+</td>
+<td style="text-align:right;">
+1.943024
+</td>
+<td style="text-align:right;">
+1.136767
+</td>
+<td style="text-align:right;">
+15.52778
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Idaho
+</td>
+<td style="text-align:right;">
+51317.90
+</td>
+<td style="text-align:right;">
+8.511491
+</td>
+<td style="text-align:right;">
+5.016433
+</td>
+<td style="text-align:right;">
+29.83419
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Illinois
+</td>
+<td style="text-align:right;">
+356542.97
+</td>
+<td style="text-align:right;">
+4.003059
+</td>
+<td style="text-align:right;">
+3.149162
+</td>
+<td style="text-align:right;">
+27.97645
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Indiana
+</td>
+<td style="text-align:right;">
+84421.67
+</td>
+<td style="text-align:right;">
+3.529656
+</td>
+<td style="text-align:right;">
+2.051216
+</td>
+<td style="text-align:right;">
+26.90971
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Iowa
+</td>
+<td style="text-align:right;">
+40090.10
+</td>
+<td style="text-align:right;">
+3.804783
+</td>
+<td style="text-align:right;">
+2.972744
+</td>
+<td style="text-align:right;">
+26.51632
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kansas
+</td>
+<td style="text-align:right;">
+54142.61
+</td>
+<td style="text-align:right;">
+5.847499
+</td>
+<td style="text-align:right;">
+4.636211
+</td>
+<td style="text-align:right;">
+32.84265
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kentucky
+</td>
+<td style="text-align:right;">
+56304.10
+</td>
+<td style="text-align:right;">
+3.341716
+</td>
+<td style="text-align:right;">
+2.524493
+</td>
+<td style="text-align:right;">
+27.88636
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Louisiana
+</td>
+<td style="text-align:right;">
+72220.00
+</td>
+<td style="text-align:right;">
+3.308912
+</td>
+<td style="text-align:right;">
+2.286117
+</td>
+<td style="text-align:right;">
+30.31047
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maine
+</td>
+<td style="text-align:right;">
+58436.50
+</td>
+<td style="text-align:right;">
+2.702709
+</td>
+<td style="text-align:right;">
+2.648991
+</td>
+<td style="text-align:right;">
+19.57014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maryland
+</td>
+<td style="text-align:right;">
+203642.18
+</td>
+<td style="text-align:right;">
+3.428016
+</td>
+<td style="text-align:right;">
+4.387663
+</td>
+<td style="text-align:right;">
+24.19997
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Massachusetts
+</td>
+<td style="text-align:right;">
+300542.11
+</td>
+<td style="text-align:right;">
+4.828984
+</td>
+<td style="text-align:right;">
+4.115925
+</td>
+<td style="text-align:right;">
+16.08527
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Michigan
+</td>
+<td style="text-align:right;">
+188309.95
+</td>
+<td style="text-align:right;">
+5.971795
+</td>
+<td style="text-align:right;">
+5.119004
+</td>
+<td style="text-align:right;">
+27.40167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Minnesota
+</td>
+<td style="text-align:right;">
+108217.45
+</td>
+<td style="text-align:right;">
+4.503234
+</td>
+<td style="text-align:right;">
+4.222868
+</td>
+<td style="text-align:right;">
+28.09457
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Mississippi
+</td>
+<td style="text-align:right;">
+31371.79
+</td>
+<td style="text-align:right;">
+3.967956
+</td>
+<td style="text-align:right;">
+2.351675
+</td>
+<td style="text-align:right;">
+25.90568
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Missouri
+</td>
+<td style="text-align:right;">
+63558.68
+</td>
+<td style="text-align:right;">
+4.518274
+</td>
+<td style="text-align:right;">
+3.795110
+</td>
+<td style="text-align:right;">
+27.61489
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Montana
+</td>
+<td style="text-align:right;">
+24334.63
+</td>
+<td style="text-align:right;">
+6.240892
+</td>
+<td style="text-align:right;">
+4.571047
+</td>
+<td style="text-align:right;">
+31.06511
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nebraska
+</td>
+<td style="text-align:right;">
+45713.98
+</td>
+<td style="text-align:right;">
+4.891774
+</td>
+<td style="text-align:right;">
+4.446360
+</td>
+<td style="text-align:right;">
+31.23408
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nevada
+</td>
+<td style="text-align:right;">
+327528.61
+</td>
+<td style="text-align:right;">
+6.539541
+</td>
+<td style="text-align:right;">
+6.034965
+</td>
+<td style="text-align:right;">
+35.38235
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Hampshire
+</td>
+<td style="text-align:right;">
+92285.27
+</td>
+<td style="text-align:right;">
+4.357465
+</td>
+<td style="text-align:right;">
+3.358509
+</td>
+<td style="text-align:right;">
+22.17054
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Jersey
+</td>
+<td style="text-align:right;">
+168719.53
+</td>
+<td style="text-align:right;">
+2.430433
+</td>
+<td style="text-align:right;">
+2.939868
+</td>
+<td style="text-align:right;">
+16.31265
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Mexico
+</td>
+<td style="text-align:right;">
+85045.08
+</td>
+<td style="text-align:right;">
+7.731113
+</td>
+<td style="text-align:right;">
+6.091481
+</td>
+<td style="text-align:right;">
+30.54192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New York
+</td>
+<td style="text-align:right;">
+352640.10
+</td>
+<td style="text-align:right;">
+3.647235
+</td>
+<td style="text-align:right;">
+2.510421
+</td>
+<td style="text-align:right;">
+28.03145
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Carolina
+</td>
+<td style="text-align:right;">
+105986.07
+</td>
+<td style="text-align:right;">
+5.051043
+</td>
+<td style="text-align:right;">
+4.403482
+</td>
+<td style="text-align:right;">
+28.16859
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Dakota
+</td>
+<td style="text-align:right;">
+20935.30
+</td>
+<td style="text-align:right;">
+6.868877
+</td>
+<td style="text-align:right;">
+5.925774
+</td>
+<td style="text-align:right;">
+30.49136
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Ohio
+</td>
+<td style="text-align:right;">
+159440.29
+</td>
+<td style="text-align:right;">
+3.208509
+</td>
+<td style="text-align:right;">
+2.255914
+</td>
+<td style="text-align:right;">
+24.71194
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oklahoma
+</td>
+<td style="text-align:right;">
+78038.52
+</td>
+<td style="text-align:right;">
+3.718856
+</td>
+<td style="text-align:right;">
+2.769977
+</td>
+<td style="text-align:right;">
+26.13269
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oregon
+</td>
+<td style="text-align:right;">
+123458.48
+</td>
+<td style="text-align:right;">
+5.583377
+</td>
+<td style="text-align:right;">
+5.453798
+</td>
+<td style="text-align:right;">
+27.25470
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+202093.28
+</td>
+<td style="text-align:right;">
+3.694461
+</td>
+<td style="text-align:right;">
+2.385509
+</td>
+<td style="text-align:right;">
+27.53741
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Rhode Island
+</td>
+<td style="text-align:right;">
+165328.28
+</td>
+<td style="text-align:right;">
+2.827979
+</td>
+<td style="text-align:right;">
+1.973176
+</td>
+<td style="text-align:right;">
+11.50268
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Carolina
+</td>
+<td style="text-align:right;">
+86315.44
+</td>
+<td style="text-align:right;">
+3.473222
+</td>
+<td style="text-align:right;">
+3.372597
+</td>
+<td style="text-align:right;">
+24.10379
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Dakota
+</td>
+<td style="text-align:right;">
+19186.70
+</td>
+<td style="text-align:right;">
+7.559266
+</td>
+<td style="text-align:right;">
+5.151703
+</td>
+<td style="text-align:right;">
+30.87422
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Tennessee
+</td>
+<td style="text-align:right;">
+93576.09
+</td>
+<td style="text-align:right;">
+3.455827
+</td>
+<td style="text-align:right;">
+3.245937
+</td>
+<td style="text-align:right;">
+27.01826
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Texas
+</td>
+<td style="text-align:right;">
+228031.75
+</td>
+<td style="text-align:right;">
+6.118228
+</td>
+<td style="text-align:right;">
+5.336348
+</td>
+<td style="text-align:right;">
+31.96442
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Utah
+</td>
+<td style="text-align:right;">
+144537.19
+</td>
+<td style="text-align:right;">
+6.358074
+</td>
+<td style="text-align:right;">
+4.635161
+</td>
+<td style="text-align:right;">
+32.87473
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Vermont
+</td>
+<td style="text-align:right;">
+29162.05
+</td>
+<td style="text-align:right;">
+3.314894
+</td>
+<td style="text-align:right;">
+2.785298
+</td>
+<td style="text-align:right;">
+21.01854
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Virginia
+</td>
+<td style="text-align:right;">
+85723.20
+</td>
+<td style="text-align:right;">
+4.590439
+</td>
+<td style="text-align:right;">
+4.930212
+</td>
+<td style="text-align:right;">
+29.35003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Washington
+</td>
+<td style="text-align:right;">
+255702.59
+</td>
+<td style="text-align:right;">
+7.723621
+</td>
+<td style="text-align:right;">
+5.982909
+</td>
+<td style="text-align:right;">
+31.68738
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+West Virginia
+</td>
+<td style="text-align:right;">
+26151.31
+</td>
+<td style="text-align:right;">
+3.037764
+</td>
+<td style="text-align:right;">
+2.420242
+</td>
+<td style="text-align:right;">
+25.70496
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wisconsin
+</td>
+<td style="text-align:right;">
+96961.96
+</td>
+<td style="text-align:right;">
+5.245954
+</td>
+<td style="text-align:right;">
+4.166401
+</td>
+<td style="text-align:right;">
+29.12581
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wyoming
+</td>
+<td style="text-align:right;">
+17900.74
+</td>
+<td style="text-align:right;">
+5.493147
+</td>
+<td style="text-align:right;">
+4.550351
+</td>
+<td style="text-align:right;">
+28.37523
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code># state var
 data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29&quot;, 
-    &quot;pct_65&quot;, &quot;pct_rural&quot;), var, na.rm = T) %&gt;% kable(&quot;latex&quot;, 
-    booktabs = T, col.names = c(&quot;State&quot;, &quot;Var of Voting Age Population (VAP)&quot;, 
+    &quot;pct_65&quot;, &quot;pct_rural&quot;), var, na.rm = T) %&gt;% kable(booktabs = T, 
+    col.names = c(&quot;State&quot;, &quot;Var of Voting Age Population (VAP)&quot;, 
         &quot;Var of % of VAP under 29&quot;, &quot;Var of % of VAP over 65&quot;, 
         &quot;Var of % of VAP in Rural Areas &quot;), caption = &quot;2016 County Population Variances by State&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 9) %&gt;% column_spec(1, 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;% column_spec(1, 
     width = &quot;3.5cm&quot;)</code></pre>
-
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-6">Table 2: </span>2016 County Population Variances by State
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+State
+</th>
+<th style="text-align:right;">
+Var of Voting Age Population (VAP)
+</th>
+<th style="text-align:right;">
+Var of % of VAP under 29
+</th>
+<th style="text-align:right;">
+Var of % of VAP over 65
+</th>
+<th style="text-align:right;">
+Var of % of VAP in Rural Areas
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Alabama
+</td>
+<td style="text-align:right;">
+6156086918
+</td>
+<td style="text-align:right;">
+11.247752
+</td>
+<td style="text-align:right;">
+5.406453
+</td>
+<td style="text-align:right;">
+696.0901
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arizona
+</td>
+<td style="text-align:right;">
+478276385045
+</td>
+<td style="text-align:right;">
+46.657147
+</td>
+<td style="text-align:right;">
+53.162780
+</td>
+<td style="text-align:right;">
+389.9895
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Arkansas
+</td>
+<td style="text-align:right;">
+1789940802
+</td>
+<td style="text-align:right;">
+18.942307
+</td>
+<td style="text-align:right;">
+15.715911
+</td>
+<td style="text-align:right;">
+579.8514
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+California
+</td>
+<td style="text-align:right;">
+808293680030
+</td>
+<td style="text-align:right;">
+44.907948
+</td>
+<td style="text-align:right;">
+22.782169
+</td>
+<td style="text-align:right;">
+834.5838
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Colorado
+</td>
+<td style="text-align:right;">
+14303154575
+</td>
+<td style="text-align:right;">
+44.504133
+</td>
+<td style="text-align:right;">
+36.317414
+</td>
+<td style="text-align:right;">
+1341.5566
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Connecticut
+</td>
+<td style="text-align:right;">
+66544426336
+</td>
+<td style="text-align:right;">
+10.305743
+</td>
+<td style="text-align:right;">
+2.556611
+</td>
+<td style="text-align:right;">
+330.0589
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Delaware
+</td>
+<td style="text-align:right;">
+22251339175
+</td>
+<td style="text-align:right;">
+26.361883
+</td>
+<td style="text-align:right;">
+31.268236
+</td>
+<td style="text-align:right;">
+342.1216
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+District of Columbia
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Florida
+</td>
+<td style="text-align:right;">
+96269252245
+</td>
+<td style="text-align:right;">
+34.483011
+</td>
+<td style="text-align:right;">
+56.861244
+</td>
+<td style="text-align:right;">
+1055.4074
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Georgia
+</td>
+<td style="text-align:right;">
+8232075703
+</td>
+<td style="text-align:right;">
+26.344324
+</td>
+<td style="text-align:right;">
+16.584961
+</td>
+<td style="text-align:right;">
+839.0592
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Hawaii
+</td>
+<td style="text-align:right;">
+91405271117
+</td>
+<td style="text-align:right;">
+3.775342
+</td>
+<td style="text-align:right;">
+1.292239
+</td>
+<td style="text-align:right;">
+241.1121
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Idaho
+</td>
+<td style="text-align:right;">
+2633526505
+</td>
+<td style="text-align:right;">
+72.445477
+</td>
+<td style="text-align:right;">
+25.164600
+</td>
+<td style="text-align:right;">
+890.0788
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Illinois
+</td>
+<td style="text-align:right;">
+127122891110
+</td>
+<td style="text-align:right;">
+16.024482
+</td>
+<td style="text-align:right;">
+9.917221
+</td>
+<td style="text-align:right;">
+782.6820
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Indiana
+</td>
+<td style="text-align:right;">
+7127018883
+</td>
+<td style="text-align:right;">
+12.458469
+</td>
+<td style="text-align:right;">
+4.207487
+</td>
+<td style="text-align:right;">
+724.1325
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Iowa
+</td>
+<td style="text-align:right;">
+1607216141
+</td>
+<td style="text-align:right;">
+14.476372
+</td>
+<td style="text-align:right;">
+8.837208
+</td>
+<td style="text-align:right;">
+703.1150
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kansas
+</td>
+<td style="text-align:right;">
+2931422665
+</td>
+<td style="text-align:right;">
+34.193245
+</td>
+<td style="text-align:right;">
+21.494455
+</td>
+<td style="text-align:right;">
+1078.6397
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Kentucky
+</td>
+<td style="text-align:right;">
+3170151305
+</td>
+<td style="text-align:right;">
+11.167067
+</td>
+<td style="text-align:right;">
+6.373064
+</td>
+<td style="text-align:right;">
+777.6493
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Louisiana
+</td>
+<td style="text-align:right;">
+5215727901
+</td>
+<td style="text-align:right;">
+10.948901
+</td>
+<td style="text-align:right;">
+5.226329
+</td>
+<td style="text-align:right;">
+918.7243
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maine
+</td>
+<td style="text-align:right;">
+3414825092
+</td>
+<td style="text-align:right;">
+7.304637
+</td>
+<td style="text-align:right;">
+7.017153
+</td>
+<td style="text-align:right;">
+382.9905
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Maryland
+</td>
+<td style="text-align:right;">
+41470138372
+</td>
+<td style="text-align:right;">
+11.751296
+</td>
+<td style="text-align:right;">
+19.251586
+</td>
+<td style="text-align:right;">
+585.6385
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Massachusetts
+</td>
+<td style="text-align:right;">
+90325558473
+</td>
+<td style="text-align:right;">
+23.319087
+</td>
+<td style="text-align:right;">
+16.940834
+</td>
+<td style="text-align:right;">
+258.7360
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Michigan
+</td>
+<td style="text-align:right;">
+35460637213
+</td>
+<td style="text-align:right;">
+35.662337
+</td>
+<td style="text-align:right;">
+26.204204
+</td>
+<td style="text-align:right;">
+750.8518
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Minnesota
+</td>
+<td style="text-align:right;">
+11711015723
+</td>
+<td style="text-align:right;">
+20.279121
+</td>
+<td style="text-align:right;">
+17.832611
+</td>
+<td style="text-align:right;">
+789.3049
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Mississippi
+</td>
+<td style="text-align:right;">
+984189327
+</td>
+<td style="text-align:right;">
+15.744676
+</td>
+<td style="text-align:right;">
+5.530375
+</td>
+<td style="text-align:right;">
+671.1044
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Missouri
+</td>
+<td style="text-align:right;">
+4039705927
+</td>
+<td style="text-align:right;">
+20.414800
+</td>
+<td style="text-align:right;">
+14.402860
+</td>
+<td style="text-align:right;">
+762.5822
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Montana
+</td>
+<td style="text-align:right;">
+592174186
+</td>
+<td style="text-align:right;">
+38.948727
+</td>
+<td style="text-align:right;">
+20.894471
+</td>
+<td style="text-align:right;">
+965.0413
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nebraska
+</td>
+<td style="text-align:right;">
+2089767847
+</td>
+<td style="text-align:right;">
+23.929448
+</td>
+<td style="text-align:right;">
+19.770118
+</td>
+<td style="text-align:right;">
+975.5679
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Nevada
+</td>
+<td style="text-align:right;">
+107274990425
+</td>
+<td style="text-align:right;">
+42.765589
+</td>
+<td style="text-align:right;">
+36.420808
+</td>
+<td style="text-align:right;">
+1251.9109
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Hampshire
+</td>
+<td style="text-align:right;">
+8516570700
+</td>
+<td style="text-align:right;">
+18.987498
+</td>
+<td style="text-align:right;">
+11.279580
+</td>
+<td style="text-align:right;">
+491.5330
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Jersey
+</td>
+<td style="text-align:right;">
+28466278499
+</td>
+<td style="text-align:right;">
+5.907003
+</td>
+<td style="text-align:right;">
+8.642821
+</td>
+<td style="text-align:right;">
+266.1025
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New Mexico
+</td>
+<td style="text-align:right;">
+7232665873
+</td>
+<td style="text-align:right;">
+59.770111
+</td>
+<td style="text-align:right;">
+37.106144
+</td>
+<td style="text-align:right;">
+932.8088
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+New York
+</td>
+<td style="text-align:right;">
+124355042783
+</td>
+<td style="text-align:right;">
+13.302320
+</td>
+<td style="text-align:right;">
+6.302212
+</td>
+<td style="text-align:right;">
+785.7622
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Carolina
+</td>
+<td style="text-align:right;">
+11233047889
+</td>
+<td style="text-align:right;">
+25.513032
+</td>
+<td style="text-align:right;">
+19.390657
+</td>
+<td style="text-align:right;">
+793.4697
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+North Dakota
+</td>
+<td style="text-align:right;">
+438286834
+</td>
+<td style="text-align:right;">
+47.181472
+</td>
+<td style="text-align:right;">
+35.114797
+</td>
+<td style="text-align:right;">
+929.7233
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Ohio
+</td>
+<td style="text-align:right;">
+25421206277
+</td>
+<td style="text-align:right;">
+10.294530
+</td>
+<td style="text-align:right;">
+5.089150
+</td>
+<td style="text-align:right;">
+610.6798
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oklahoma
+</td>
+<td style="text-align:right;">
+6090010583
+</td>
+<td style="text-align:right;">
+13.829891
+</td>
+<td style="text-align:right;">
+7.672774
+</td>
+<td style="text-align:right;">
+682.9175
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Oregon
+</td>
+<td style="text-align:right;">
+15241996382
+</td>
+<td style="text-align:right;">
+31.174101
+</td>
+<td style="text-align:right;">
+29.743913
+</td>
+<td style="text-align:right;">
+742.8186
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Pennsylvania
+</td>
+<td style="text-align:right;">
+40841693375
+</td>
+<td style="text-align:right;">
+13.649042
+</td>
+<td style="text-align:right;">
+5.690654
+</td>
+<td style="text-align:right;">
+758.3088
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Rhode Island
+</td>
+<td style="text-align:right;">
+27333441063
+</td>
+<td style="text-align:right;">
+7.997464
+</td>
+<td style="text-align:right;">
+3.893422
+</td>
+<td style="text-align:right;">
+132.3117
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Carolina
+</td>
+<td style="text-align:right;">
+7450355348
+</td>
+<td style="text-align:right;">
+12.063275
+</td>
+<td style="text-align:right;">
+11.374409
+</td>
+<td style="text-align:right;">
+580.9925
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+South Dakota
+</td>
+<td style="text-align:right;">
+368129361
+</td>
+<td style="text-align:right;">
+57.142508
+</td>
+<td style="text-align:right;">
+26.540042
+</td>
+<td style="text-align:right;">
+953.2176
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Tennessee
+</td>
+<td style="text-align:right;">
+8756484879
+</td>
+<td style="text-align:right;">
+11.942738
+</td>
+<td style="text-align:right;">
+10.536104
+</td>
+<td style="text-align:right;">
+729.9862
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Texas
+</td>
+<td style="text-align:right;">
+51998478843
+</td>
+<td style="text-align:right;">
+37.432715
+</td>
+<td style="text-align:right;">
+28.476613
+</td>
+<td style="text-align:right;">
+1021.7244
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Utah
+</td>
+<td style="text-align:right;">
+20890999649
+</td>
+<td style="text-align:right;">
+40.425110
+</td>
+<td style="text-align:right;">
+21.484719
+</td>
+<td style="text-align:right;">
+1080.7476
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Vermont
+</td>
+<td style="text-align:right;">
+850425145
+</td>
+<td style="text-align:right;">
+10.988519
+</td>
+<td style="text-align:right;">
+7.757886
+</td>
+<td style="text-align:right;">
+441.7788
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Virginia
+</td>
+<td style="text-align:right;">
+7348466694
+</td>
+<td style="text-align:right;">
+21.072132
+</td>
+<td style="text-align:right;">
+24.306987
+</td>
+<td style="text-align:right;">
+861.4241
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Washington
+</td>
+<td style="text-align:right;">
+65383813469
+</td>
+<td style="text-align:right;">
+59.654324
+</td>
+<td style="text-align:right;">
+35.795205
+</td>
+<td style="text-align:right;">
+1004.0903
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+West Virginia
+</td>
+<td style="text-align:right;">
+683890798
+</td>
+<td style="text-align:right;">
+9.228011
+</td>
+<td style="text-align:right;">
+5.857570
+</td>
+<td style="text-align:right;">
+660.7452
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wisconsin
+</td>
+<td style="text-align:right;">
+9401621356
+</td>
+<td style="text-align:right;">
+27.520029
+</td>
+<td style="text-align:right;">
+17.358901
+</td>
+<td style="text-align:right;">
+848.3130
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Wyoming
+</td>
+<td style="text-align:right;">
+320436420
+</td>
+<td style="text-align:right;">
+30.174668
+</td>
+<td style="text-align:right;">
+20.705689
+</td>
+<td style="text-align:right;">
+805.1537
+</td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
 </div>
 <div id="integrating-health-data" class="section level3">
 <h3>Integrating Health Data</h3>
@@ -454,40 +5293,354 @@ data %&gt;% group_by(state) %&gt;% summarise_at(c(&quot;cvap&quot;, &quot;pct_29
     dem_pres, &quot;Republican&quot;, &quot;Democrat&quot;)) %&gt;% summarise(rep_counties = sum(winner_pres == 
     &quot;Republican&quot;, na.rm = T), dem_counties = sum(winner_pres == 
     &quot;Democrat&quot;, na.rm = T), pct_rep = round((rep_counties/(rep_counties + 
-    dem_counties)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
-    col.names = c(&quot;QoL Life Quartile&quot;, &quot;Republican Voting Counties&quot;, 
-        &quot;Democrat Voting Counties&quot;, &quot;Percentage of Quartile Voting Republican&quot;), 
-    caption = &quot;2016 County Quality of Life Quartiles and Voting Preferences&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 10, latex_options = &quot;hold_position&quot;)</code></pre>
-
+    dem_counties)) * 100)) %&gt;% kable(booktabs = T, col.names = c(&quot;QoL Life Quartile&quot;, 
+    &quot;Republican Voting Counties&quot;, &quot;Democrat Voting Counties&quot;, 
+    &quot;Percentage of Quartile Voting Republican&quot;), caption = &quot;2016 County Quality of Life Quartiles and Voting Preferences&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-7">Table 3: </span>2016 County Quality of Life Quartiles and Voting Preferences
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+QoL Life Quartile
+</th>
+<th style="text-align:right;">
+Republican Voting Counties
+</th>
+<th style="text-align:right;">
+Democrat Voting Counties
+</th>
+<th style="text-align:right;">
+Percentage of Quartile Voting Republican
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+659
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+87
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+685
+</td>
+<td style="text-align:right;">
+71
+</td>
+<td style="text-align:right;">
+91
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+651
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+88
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+554
+</td>
+<td style="text-align:right;">
+195
+</td>
+<td style="text-align:right;">
+74
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>data %&gt;% group_by(ses_q) %&gt;% arrange(ses_q) %&gt;% filter(ses_q != 
     &quot;NR&quot; &amp; ses_q != &quot;5&quot;) %&gt;% mutate(winner_pres = ifelse(rep_pres &gt; 
     dem_pres, &quot;Republican&quot;, &quot;Democrat&quot;)) %&gt;% summarise(rep_counties = sum(winner_pres == 
     &quot;Republican&quot;, na.rm = T), dem_counties = sum(winner_pres == 
     &quot;Democrat&quot;, na.rm = T), pct_rep = round((rep_counties/(rep_counties + 
-    dem_counties)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
-    col.names = c(&quot;SES of Life Quartile&quot;, &quot;Republican Voting Counties&quot;, 
-        &quot;Democrat Voting Counties&quot;, &quot;Percentage of Quartile Voting Republican&quot;), 
-    caption = &quot;2016 County SES Quartiles and Voting Preferences&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 10, latex_options = &quot;hold_position&quot;)</code></pre>
-
+    dem_counties)) * 100)) %&gt;% kable(booktabs = T, col.names = c(&quot;SES of Life Quartile&quot;, 
+    &quot;Republican Voting Counties&quot;, &quot;Democrat Voting Counties&quot;, 
+    &quot;Percentage of Quartile Voting Republican&quot;), caption = &quot;2016 County SES Quartiles and Voting Preferences&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-7">Table 3: </span>2016 County SES Quartiles and Voting Preferences
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+SES of Life Quartile
+</th>
+<th style="text-align:right;">
+Republican Voting Counties
+</th>
+<th style="text-align:right;">
+Democrat Voting Counties
+</th>
+<th style="text-align:right;">
+Percentage of Quartile Voting Republican
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+642
+</td>
+<td style="text-align:right;">
+117
+</td>
+<td style="text-align:right;">
+85
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+671
+</td>
+<td style="text-align:right;">
+82
+</td>
+<td style="text-align:right;">
+89
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+663
+</td>
+<td style="text-align:right;">
+82
+</td>
+<td style="text-align:right;">
+89
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+573
+</td>
+<td style="text-align:right;">
+176
+</td>
+<td style="text-align:right;">
+77
+</td>
+</tr>
+</tbody>
+</table>
 <p>To find something more interesting, we can use population instead of the number of counties. This is essentially the same data, but each county’s population will be added to the total.</p>
 <pre class="r"><code>data %&gt;% group_by(quality_q) %&gt;% arrange(quality_q) %&gt;% 
     filter(quality_q != &quot;NR&quot; &amp; quality_q != &quot;5&quot;) %&gt;% summarise(rep_voters = sum(rep_pres, 
     na.rm = T), dem_voters = sum(dem_pres, na.rm = T), pct_rep = round((rep_voters/(rep_voters + 
-    dem_voters)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
-    col.names = c(&quot;QoL Quartile&quot;, &quot;Republican Voters&quot;, &quot;Democrat Voters&quot;, 
-        &quot;Percentage of Quartile Voting Republican&quot;), caption = &quot;2016 County Quality of Life Quartiles and Voter Populations&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 10, latex_options = &quot;HOLD_position&quot;)</code></pre>
-
+    dem_voters)) * 100)) %&gt;% kable(booktabs = T, col.names = c(&quot;QoL Quartile&quot;, 
+    &quot;Republican Voters&quot;, &quot;Democrat Voters&quot;, &quot;Percentage of Quartile Voting Republican&quot;), 
+    caption = &quot;2016 County Quality of Life Quartiles and Voter Populations&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-8">Table 4: </span>2016 County Quality of Life Quartiles and Voter Populations
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+QoL Quartile
+</th>
+<th style="text-align:right;">
+Republican Voters
+</th>
+<th style="text-align:right;">
+Democrat Voters
+</th>
+<th style="text-align:right;">
+Percentage of Quartile Voting Republican
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+21234033
+</td>
+<td style="text-align:right;">
+19291759
+</td>
+<td style="text-align:right;">
+52
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+14725908
+</td>
+<td style="text-align:right;">
+13178698
+</td>
+<td style="text-align:right;">
+53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+14020342
+</td>
+<td style="text-align:right;">
+13765475
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+12027067
+</td>
+<td style="text-align:right;">
+18244643
+</td>
+<td style="text-align:right;">
+40
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>data %&gt;% group_by(ses_q) %&gt;% arrange(ses_q) %&gt;% filter(ses_q != 
     &quot;NR&quot; &amp; ses_q != &quot;5&quot;) %&gt;% summarise(rep_voters = sum(rep_pres, 
     na.rm = T), dem_voters = sum(dem_pres, na.rm = T), pct_rep = round((rep_voters/(rep_voters + 
-    dem_voters)) * 100)) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
-    col.names = c(&quot;SES Quartile&quot;, &quot;Republican Voters&quot;, &quot;Democrat Voters&quot;, 
-        &quot;Percentage of Quartile Voting Republican&quot;), caption = &quot;2016 County SES Quartiles and Voter Populations&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 10, latex_options = &quot;HOLD_position&quot;)</code></pre>
-
+    dem_voters)) * 100)) %&gt;% kable(booktabs = T, col.names = c(&quot;SES Quartile&quot;, 
+    &quot;Republican Voters&quot;, &quot;Democrat Voters&quot;, &quot;Percentage of Quartile Voting Republican&quot;), 
+    caption = &quot;2016 County SES Quartiles and Voter Populations&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-8">Table 4: </span>2016 County SES Quartiles and Voter Populations
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+SES Quartile
+</th>
+<th style="text-align:right;">
+Republican Voters
+</th>
+<th style="text-align:right;">
+Democrat Voters
+</th>
+<th style="text-align:right;">
+Percentage of Quartile Voting Republican
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+22651141
+</td>
+<td style="text-align:right;">
+21471222
+</td>
+<td style="text-align:right;">
+51
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+15671220
+</td>
+<td style="text-align:right;">
+14741634
+</td>
+<td style="text-align:right;">
+52
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+13277831
+</td>
+<td style="text-align:right;">
+13654827
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+10407158
+</td>
+<td style="text-align:right;">
+14612892
+</td>
+<td style="text-align:right;">
+42
+</td>
+</tr>
+</tbody>
+</table>
 <p>Another way for us to assess relationships is by using a correlation matrix. The choice of variables was quality of life, SES, %29, %65, %rural, and the voting data. Keep in mind that a negative correlation with SES or Quality of Life indicates an INCREASE in that metric, as in this dataset quartile 1 is considered the top quartile.</p>
 <pre class="r"><code># convert dataframe to numeric
 data$ses_r &lt;- as.numeric(data$ses_r)
@@ -502,11 +5655,179 @@ corr &lt;- data %&gt;% ungroup() %&gt;% mutate(pct_rep = round((rep_pres/total_v
     `Percent Rural` = pct_rural, `Percent Republican` = pct_rep) %&gt;% 
     as.matrix() %&gt;% cor(use = &quot;complete.obs&quot;) %&gt;% round(2)
 
-corr %&gt;% kable(&quot;latex&quot;, booktabs = T, caption = &quot;2016 National Correlation Matrix&quot;, 
-    row.names = T) %&gt;% kable_styling(full_width = T, font_size = 10, 
-    latex_options = &quot;hold_position&quot;) %&gt;% column_spec(1, 
+corr %&gt;% kable(booktabs = T, caption = &quot;2016 National Correlation Matrix&quot;, 
+    row.names = T) %&gt;% kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+    &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;% column_spec(1, 
     width = &quot;3.5cm&quot;)</code></pre>
-
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-9">Table 5: </span>2016 National Correlation Matrix
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+QoL Quartile
+</th>
+<th style="text-align:right;">
+SES Quartile
+</th>
+<th style="text-align:right;">
+Percent 29 and Under
+</th>
+<th style="text-align:right;">
+Percent 65 and Over
+</th>
+<th style="text-align:right;">
+Percent Rural
+</th>
+<th style="text-align:right;">
+Percent Republican
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+QoL Quartile
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.70
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+-0.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+SES Quartile
+</td>
+<td style="text-align:right;">
+0.70
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
+0.15
+</td>
+<td style="text-align:right;">
+0.14
+</td>
+<td style="text-align:right;">
+-0.10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent 29 and Under
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+-0.83
+</td>
+<td style="text-align:right;">
+-0.45
+</td>
+<td style="text-align:right;">
+-0.24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent 65 and Over
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+0.15
+</td>
+<td style="text-align:right;">
+-0.83
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent Rural
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.14
+</td>
+<td style="text-align:right;">
+-0.45
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent Republican
+</td>
+<td style="text-align:right;">
+-0.15
+</td>
+<td style="text-align:right;">
+-0.10
+</td>
+<td style="text-align:right;">
+-0.24
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+</tbody>
+</table>
 <p>To effectively use the SES and Life Quality rankings variable, we need to focus on a specific state (because the rankings are within each state).This is a correlation matrix using Texas and its ranking data. For the most part, this correlation matrix observes the same trends as the national, but it did introduce a new correlation in which %republican is negatively correlated withh both Life Quality and SES, suggesting that “healthier” counties are more likely to vote republican.</p>
 <pre class="r"><code>corr2 &lt;- data %&gt;% ungroup() %&gt;% filter(state == &quot;Texas&quot;) %&gt;% 
     mutate(pct_rep = round((rep_pres/total_votes) * 100)) %&gt;% 
@@ -517,11 +5838,179 @@ corr %&gt;% kable(&quot;latex&quot;, booktabs = T, caption = &quot;2016 National
     `Percent Republican` = pct_rep) %&gt;% as.matrix() %&gt;% 
     cor(use = &quot;complete.obs&quot;) %&gt;% round(2)
 
-corr2 %&gt;% kable(&quot;latex&quot;, booktabs = T, caption = &quot;2016 Texas Correlation Matrix&quot;, 
-    row.names = T) %&gt;% kable_styling(full_width = T, font_size = 10, 
-    latex_options = &quot;HOLD_position&quot;) %&gt;% column_spec(1, 
+corr2 %&gt;% kable(booktabs = T, caption = &quot;2016 Texas Correlation Matrix&quot;, 
+    row.names = T) %&gt;% kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+    &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;% column_spec(1, 
     width = &quot;3.5cm&quot;)</code></pre>
-
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-10">Table 6: </span>2016 Texas Correlation Matrix
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Quality Rank
+</th>
+<th style="text-align:right;">
+SES Rank
+</th>
+<th style="text-align:right;">
+Percent 29 and Under
+</th>
+<th style="text-align:right;">
+Percent 65 and Over
+</th>
+<th style="text-align:right;">
+Percent Rural
+</th>
+<th style="text-align:right;">
+Percent Republican
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Quality Rank
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.72
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+-0.09
+</td>
+<td style="text-align:right;">
+-0.11
+</td>
+<td style="text-align:right;">
+-0.44
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+SES Rank
+</td>
+<td style="text-align:right;">
+0.72
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.13
+</td>
+<td style="text-align:right;">
+0.03
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
+-0.42
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent 29 and Under
+</td>
+<td style="text-align:right;">
+0.31
+</td>
+<td style="text-align:right;">
+0.13
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+-0.85
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+<td style="text-align:right;">
+-0.50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent 65 and Over
+</td>
+<td style="text-align:right;">
+-0.09
+</td>
+<td style="text-align:right;">
+0.03
+</td>
+<td style="text-align:right;">
+-0.85
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.63
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent Rural
+</td>
+<td style="text-align:right;">
+-0.11
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+<td style="text-align:right;">
+0.63
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.48
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3.5cm; ">
+Percent Republican
+</td>
+<td style="text-align:right;">
+-0.44
+</td>
+<td style="text-align:right;">
+-0.42
+</td>
+<td style="text-align:right;">
+-0.50
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+<td style="text-align:right;">
+0.48
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="visualizations" class="section level1">
@@ -615,12 +6104,89 @@ pam_clust$silinfo$widths %&gt;% as.data.frame %&gt;% mutate(x = 3005:1) %&gt;%
 <p><img src="/Project1_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>One way of determining along what variables the PMA clustering has clustered the data is by looking at the median values for each cluster. Examining these medians, it’s evident that no clustering has occured based on %29, %65, or %republican, as all those values are very similar. The SES and QoL quartiles and the %rural are all potential causes of clustering.</p>
 <pre class="r"><code>pam_data %&gt;% mutate(Cluster = as.factor(pam_clust$clustering)) %&gt;% 
-    slice(pam_clust$id.med) %&gt;% kable(&quot;latex&quot;, booktabs = T, 
-    col.names = c(&quot;QoL quartile&quot;, &quot;SES quartile&quot;, &quot; % 29 and under&quot;, 
-        &quot;% 65 and older&quot;, &quot;% rural&quot;, &quot;% republican&quot;, &quot;Cluster&quot;), 
-    caption = &quot;2016 national county PAM clustering medians&quot;) %&gt;% 
-    kable_styling(full_width = T, font_size = 10, latex_options = &quot;HOLD_position&quot;)</code></pre>
-
+    slice(pam_clust$id.med) %&gt;% kable(booktabs = T, col.names = c(&quot;QoL quartile&quot;, 
+    &quot;SES quartile&quot;, &quot; % 29 and under&quot;, &quot;% 65 and older&quot;, 
+    &quot;% rural&quot;, &quot;% republican&quot;, &quot;Cluster&quot;), caption = &quot;2016 national county PAM clustering medians&quot;) %&gt;% 
+    kable_styling(full_width = F, bootstrap_options = c(&quot;striped&quot;, 
+        &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-16">Table 7: </span>2016 national county PAM clustering medians
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+QoL quartile
+</th>
+<th style="text-align:right;">
+SES quartile
+</th>
+<th style="text-align:right;">
+% 29 and under
+</th>
+<th style="text-align:right;">
+% 65 and older
+</th>
+<th style="text-align:right;">
+% rural
+</th>
+<th style="text-align:right;">
+% republican
+</th>
+<th style="text-align:left;">
+Cluster
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+37.19891
+</td>
+<td style="text-align:right;">
+16.40258
+</td>
+<td style="text-align:right;">
+55.39737
+</td>
+<td style="text-align:right;">
+68
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+36.83496
+</td>
+<td style="text-align:right;">
+17.95796
+</td>
+<td style="text-align:right;">
+70.82423
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+</tbody>
+</table>
 <p>This final figure contains all the correlation values and clustering values for each of the variable points. Looking at the grapphs of distribution (the line from the top left to the bottom right corner), it’s clear that both the SES and QoL quartile were almost totally separated into two clusters (4 and 3, 2 and 1). Looking at the crossing between SES and QoL, it becomes aparent that the basis for the separation of the groups was primarily by these metrics, in which indiviuals with an SES of 4 are separate from individuals with an SES of 3, 2, and 1 (nearly the same separation exists for QoL, due to its high correlation with SES).</p>
 <pre class="r"><code>pam_data %&gt;% rename(`QoL quartile` = quality_q, `SES quartile` = ses_q, 
     `% 29 and under` = pct_29, `% 65 and over` = pct_65, 
