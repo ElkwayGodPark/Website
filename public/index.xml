@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Portfolio</title>
+    <title>WGV&#39;s Portfolio</title>
     <link>/</link>
-    <description>Recent content on Portfolio</description>
+    <description>Recent content on WGV&#39;s Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 02 Oct 2016 22:55:05 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Project 1: Exploratory Data Analysis</title>
+      <link>/project1/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project1/</guid>
+      <description>IntroductionThe two datasets that were chosen are a 2016 national county voting data dataset, and a 2016 national county health outcomes data dataset. Both are organized by row, with each row being a county. The voting data contains a variety of statistics, like percentage of a count voting base under 29, percentage of a county living rurally, total voting age population of a county, votes recorded for democratic senate races, votes recorded for 3rd party presidential races, etc.</description>
+    </item>
+    
+    <item>
+      <title>Project 2: Modeling, Testing, and Predicting</title>
+      <link>/project2/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project2/</guid>
+      <description>IntroductionBefore the data can be used, it has to be cleaned and joined together.This results in a 2297 row by 31 column sheet, containing every players season stats for the 2015-16 to the 2018-19 season, as well as whether or not they placed into All NBA. The dataset is trimmed to only contain “starters”, or players with at least 41 games started in the season (half total games). This reduces the set to 547 observations of players who could potentially earn All NBA.</description>
+    </item>
     
     <item>
       <title>Python Is Cool</title>
@@ -31,24 +49,6 @@ import reimport collectionsimport operator#array for all wordswordList=[]#r
   Exploratory Data Analysis with Tidyverse Tools
   Modeling, Testing, and Classification
   </description>
-    </item>
-    
-    <item>
-      <title>Project 1: Exploratory Data Analysis</title>
-      <link>/project1/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/project1/</guid>
-      <description>IntroductionThe two datasets that were chosen are a 2016 national county voting data dataset, and a 2016 national county health outcomes data dataset. Both are organized by row, with each row being a county. The voting data contains a variety of statistics, like percentage of a count voting base under 29, percentage of a county living rurally, total voting age population of a county, votes recorded for democratic senate races, votes recorded for 3rd party presidential races, etc.</description>
-    </item>
-    
-    <item>
-      <title>Project 2: Modeling, Testing, and Predicting</title>
-      <link>/project2/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/project2/</guid>
-      <description>IntroductionBefore the data can be used, it has to be cleaned and joined together.This results in a 2297 row by 31 column sheet, containing every players season stats for the 2015-16 to the 2018-19 season, as well as whether or not they placed into All NBA. The dataset is trimmed to only contain “starters”, or players with at least 41 games started in the season (half total games). This reduces the set to 547 observations of players who could potentially earn All NBA.</description>
     </item>
     
   </channel>
