@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>r on Portfolio</title>
+    <link>/tags/r/</link>
+    <description>Recent content in r on Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Python Is Cool</title>
+      <link>/blog/python-is-cool/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/python-is-cool/</guid>
+      <description>This is some basic python code showing how the language can be used in data science. Our example will be a reading of Great Expectations by Thomas Paine!Lets start by loading in the book. The textfile “CommonSense.txt” contains all the information. We will also load in some necessary packages.
+import reimport collectionsimport operator#array for all wordswordList=[]#read novel into linesnovel = open(&amp;quot;CommonSense.txt&amp;quot;)lines = novel.</description>
+    </item>
+    
+  </channel>
+</rss>

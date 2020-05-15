@@ -1,0 +1,136 @@
+---
+title: Python Is Cool
+author: Will Graber
+date: '2020-05-14'
+slug: python-is-cool
+categories:
+  - Python
+tags:
+  - python
+  - r
+description: 'Python Basics.'
+---
+
+![](/blog/2020-05-14-python-is-cool_files/common.jpg)
+
+### This is some basic python code showing how the language can be used in data science. Our example will be a reading of Great Expectations by Thomas Paine!
+
+Lets start by loading in the book. The textfile "CommonSense.txt" contains all the information. We will also load in some necessary packages.
+
+```{python}
+import re
+import collections
+import operator
+
+#array for all words
+wordList=[]
+
+#read novel into lines
+novel = open("CommonSense.txt")
+lines = novel.readlines()
+novel.close()
+print(lines[0:10])
+```
+
+The next thing we will do is loop through the lines of text pulled from the text file. We will skip all line breaks (\n) and split the rest of the lines by spaces. Then we will remove all punctuation using regex. Using regex allows for words ending with or containing punctuation to be retained, just minus the punctuation. Any words that make it trough this process will be put into our wordList.
+
+```{python}
+#loop through all lines in novel
+for i in range(len(lines)):
+  #skip line breaks
+  if lines[i] == "\n":
+    continue
+  
+  else:
+    #split each line, loop through words using lower() and removing punctuation w/ regex
+    lineWords = lines[i].split()
+    for j in range(len(lineWords)):
+      lineWords[j] = lineWords[j].lower()
+      lineWords[j] = re.sub(r"[^a-z]","",lineWords[j])
+      if re.search("^[a-z]+$", lineWords[j]):
+        #append words to word list
+        wordList.append(lineWords[j])
+
+print(wordList[0:10])
+```
+
+Now lets see a way we can use this information to do something interesting. A useful way to store this information would be in a dictionary. Dictionaries are built up of key-value pairs. Here, we will create a dictionary in which the keys are the words themselves, and the values are the frequencies with which these words appear! We use the collections library to sort this dictionary alphabetically.
+
+```{python}
+#create dic by looping through words, adding a new key if the word hasn't been seen before or incrementing by 1 if it has
+dic = {}
+for i in range(len(wordList)):
+  word = wordList[i]
+  if word in dic.keys():
+    dic[word] += 1
+  else:
+    dic[word] = 1
+    
+#sorthing the dic by values with the operator library
+wordFreqs = dict(sorted(dic.items(), key=operator.itemgetter(1), reverse = True))
+
+#Printing off the 10 most common words
+items = wordFreqs.items()
+first_10 = list(items)[:10]
+for i in first_10:
+  print(i[0], ":", i[1])
+```
+
+Let's do one more exercise. We can use our previous dictionary to create a new dictionary that has the frequency of frequency of words. That sounds confusing, but what it means is that if a word appears only once, the key "1", meaning only used once, has its value increased by 1. If a word was used 100 times, the key "100" will have its value increased by 1.
+
+```{python}
+#create a dictionary the same way as before, either making a new key or incrementing by one if it has been seen
+dic_2 = {}
+for i in dic:
+  frequency = dic[i]
+  if frequency in dic_2.keys():
+    dic_2[frequency] += 1
+  else:
+    dic_2[frequency] = 1
+
+#using collections library, sort the dictionary by its keys this time.
+wordFreqSquared = collections.OrderedDict(sorted(dic_2.items()))
+
+#Printing off the number of words used only 1 through 10 times
+items = wordFreqSquared.items()
+first_10 = list(items)[:10]
+for i in first_10:
+  print(i[0], ":", i[1])
+```
+
+Wow! There were 1928 words that were used once and only once in Common Sense. That's pretty interesting. 
+
+So, how can this actually be used for data science? What's the point? Well, let's find out! We'll start by converting the dictionary into a csv.
+
+```{python results = "hide"}
+#Make a csv!
+freqFile = open("./freqFile.txt", "w")
+freqFile.write("times_used,count\n")
+for i in wordFreqSquared:
+  freqFile.write(str(i) + "," + str(wordFreqSquared[i]) + "\n")
+freqFile.close()
+```
+
+Now we have made a CSV we can access through R. Let's do that and create a simple bar plot of the data we have created.
+
+```{r}
+library(readr)
+library(ggplot2)
+library(tidyverse)
+df <- read_csv("freqFile.txt")
+
+#split the tail into one group
+tail <- df %>% filter(times_used > 20) %>% summarize_all(sum) %>% mutate(times_used = 21)
+
+#add tail to first group
+use <- df %>% filter(times_used < 21)
+use <- use %>% full_join(tail) %>% arrange(times_used)
+
+ggplot(use, aes(x = factor(times_used), y = count)) + 
+  geom_bar(stat = "identity", position=position_dodge()) +
+  scale_x_discrete(labels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21+")) +
+  theme_minimal() +
+  labs(title = "Frequency of words used a certain number of times", x = "Number of times a word was used", y = "Number of words")
+```
+
+There you go! We took a long text file, and using python we turned it into a readable CSV that we can perform data analysis on. Python is a very useful tool!

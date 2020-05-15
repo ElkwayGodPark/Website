@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="William Graber" />
+    <meta name="description" content="Statistics And Data">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Python Is Cool</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/william_graberv_resume.pdf">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/blog/python-is-cool/">Python Is Cool</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          May 14, 2020
+            &nbsp;&nbsp;
+            
+            <span class="label label-success">python</span>
+            
+            <span class="label label-success">r</span>
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<p><img src="/blog/2020-05-14-python-is-cool_files/common.jpg" /></p>
+<div id="this-is-some-basic-python-code-showing-how-the-language-can-be-used-in-data-science.-our-example-will-be-a-reading-of-great-expectations-by-thomas-paine" class="section level3">
+<h3>This is some basic python code showing how the language can be used in data science. Our example will be a reading of Great Expectations by Thomas Paine!</h3>
+<p>Lets start by loading in the book. The textfile “CommonSense.txt” contains all the information. We will also load in some necessary packages.</p>
+<pre class="python"><code>import re
+import collections
+import operator
+
+#array for all words
+wordList=[]
+
+#read novel into lines
+novel = open(&quot;CommonSense.txt&quot;)
+lines = novel.readlines()
+novel.close()
+print(lines[0:10])</code></pre>
+<pre><code>## [&#39;ï»¿COMMON SENSE;\n&#39;, &#39;\n&#39;, &#39;addressed to the\n&#39;, &#39;\n&#39;, &#39;INHABITANTS\n&#39;, &#39;\n&#39;, &#39;of\n&#39;, &#39;\n&#39;, &#39;AMERICA,\n&#39;, &#39;\n&#39;]</code></pre>
+<p>The next thing we will do is loop through the lines of text pulled from the text file. We will skip all line breaks () and split the rest of the lines by spaces. Then we will remove all punctuation using regex. Using regex allows for words ending with or containing punctuation to be retained, just minus the punctuation. Any words that make it trough this process will be put into our wordList.</p>
+<pre class="python"><code>#loop through all lines in novel
+for i in range(len(lines)):
+  #skip line breaks
+  if lines[i] == &quot;\n&quot;:
+    continue
+  
+  else:
+    #split each line, loop through words using lower() and removing punctuation w/ regex
+    lineWords = lines[i].split()
+    for j in range(len(lineWords)):
+      lineWords[j] = lineWords[j].lower()
+      lineWords[j] = re.sub(r&quot;[^a-z]&quot;,&quot;&quot;,lineWords[j])
+      if re.search(&quot;^[a-z]+$&quot;, lineWords[j]):
+        #append words to word list
+        wordList.append(lineWords[j])
+
+print(wordList[0:10])</code></pre>
+<pre><code>## [&#39;common&#39;, &#39;sense&#39;, &#39;addressed&#39;, &#39;to&#39;, &#39;the&#39;, &#39;inhabitants&#39;, &#39;of&#39;, &#39;america&#39;, &#39;on&#39;, &#39;the&#39;]</code></pre>
+<p>Now lets see a way we can use this information to do something interesting. A useful way to store this information would be in a dictionary. Dictionaries are built up of key-value pairs. Here, we will create a dictionary in which the keys are the words themselves, and the values are the frequencies with which these words appear! We use the collections library to sort this dictionary alphabetically.</p>
+<pre class="python"><code>#create dic by looping through words, adding a new key if the word hasn&#39;t been seen before or incrementing by 1 if it has
+dic = {}
+for i in range(len(wordList)):
+  word = wordList[i]
+  if word in dic.keys():
+    dic[word] += 1
+  else:
+    dic[word] = 1
+    
+#sorthing the dic by values with the operator library
+wordFreqs = dict(sorted(dic.items(), key=operator.itemgetter(1), reverse = True))
+
+#Printing off the 10 most common words
+items = wordFreqs.items()
+first_10 = list(items)[:10]
+for i in first_10:
+  print(i[0], &quot;:&quot;, i[1])</code></pre>
+<pre><code>## the : 1500
+## of : 1026
+## and : 797
+## to : 637
+## a : 490
+## in : 389
+## is : 385
+## that : 301
+## be : 268
+## it : 255</code></pre>
+<p>Let’s do one more exercise. We can use our previous dictionary to create a new dictionary that has the frequency of frequency of words. That sounds confusing, but what it means is that if a word appears only once, the key “1”, meaning only used once, has its value increased by 1. If a word was used 100 times, the key “100” will have its value increased by 1.</p>
+<pre class="python"><code>#create a dictionary the same way as before, either making a new key or incrementing by one if it has been seen
+dic_2 = {}
+for i in dic:
+  frequency = dic[i]
+  if frequency in dic_2.keys():
+    dic_2[frequency] += 1
+  else:
+    dic_2[frequency] = 1
+
+#using collections library, sort the dictionary by its keys this time.
+wordFreqSquared = collections.OrderedDict(sorted(dic_2.items()))
+
+#Printing off the number of words used only 1 through 10 times
+items = wordFreqSquared.items()
+first_10 = list(items)[:10]
+for i in first_10:
+  print(i[0], &quot;:&quot;, i[1])</code></pre>
+<pre><code>## 1 : 1928
+## 2 : 559
+## 3 : 259
+## 4 : 146
+## 5 : 112
+## 6 : 83
+## 7 : 67
+## 8 : 44
+## 9 : 30
+## 10 : 24</code></pre>
+<p>Wow! There were 1928 words that were used once and only once in Common Sense. That’s pretty interesting.</p>
+<p>So, how can this actually be used for data science? What’s the point? Well, let’s find out! We’ll start by converting the dictionary into a csv.</p>
+<pre class="python"><code>#Make a csv!
+freqFile = open(&quot;./freqFile.txt&quot;, &quot;w&quot;)
+freqFile.write(&quot;times_used,count\n&quot;)</code></pre>
+<pre class="python"><code>for i in wordFreqSquared:
+  freqFile.write(str(i) + &quot;,&quot; + str(wordFreqSquared[i]) + &quot;\n&quot;)</code></pre>
+<pre class="python"><code>freqFile.close()</code></pre>
+<p>Now we have made a CSV we can access through R. Let’s do that and create a simple bar plot of the data we have created.</p>
+<pre class="r"><code>library(readr)
+library(ggplot2)
+library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages -------------------------- tidyverse 1.3.0 --</code></pre>
+<pre><code>## v tibble  2.1.3     v dplyr   0.8.4
+## v tidyr   1.0.2     v stringr 1.4.0
+## v purrr   0.3.3     v forcats 0.5.0</code></pre>
+<pre><code>## -- Conflicts ----------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>df &lt;- read_csv(&quot;freqFile.txt&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   times_used = col_double(),
+##   count = col_double()
+## )</code></pre>
+<pre class="r"><code>#split the tail into one group
+tail &lt;- df %&gt;% filter(times_used &gt; 20) %&gt;% summarize_all(sum) %&gt;% mutate(times_used = 21)
+
+#add tail to first group
+use &lt;- df %&gt;% filter(times_used &lt; 21)
+use &lt;- use %&gt;% full_join(tail) %&gt;% arrange(times_used)</code></pre>
+<pre><code>## Joining, by = c(&quot;times_used&quot;, &quot;count&quot;)</code></pre>
+<pre class="r"><code>ggplot(use, aes(x = factor(times_used), y = count)) + 
+  geom_bar(stat = &quot;identity&quot;, position=position_dodge()) +
+  scale_x_discrete(labels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;, &quot;13&quot;, &quot;14&quot;, &quot;15&quot;, &quot;16&quot;, &quot;17&quot;, &quot;18&quot;, &quot;19&quot;, &quot;20&quot;, &quot;21+&quot;)) +
+  theme_minimal() +
+  labs(title = &quot;Frequency of words used a certain number of times&quot;, x = &quot;Number of times a word was used&quot;, y = &quot;Number of words&quot;)</code></pre>
+<p><img src="/blog/2020-05-14-python-is-cool_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>There you go! We took a long text file, and using python we turned it into a readable CSV that we can perform data analysis on. Python is a very useful tool!</p>
+</div>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>
