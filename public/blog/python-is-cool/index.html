@@ -179,27 +179,15 @@ freqFile.write(&quot;times_used,count\n&quot;)</code></pre>
 <p>Now we have made a CSV we can access through R. Let’s do that and create a simple bar plot of the data we have created.</p>
 <pre class="r"><code>library(readr)
 library(ggplot2)
-library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --</code></pre>
-<pre><code>## v tibble  2.1.3     v dplyr   0.8.4
-## v tidyr   1.0.2     v stringr 1.4.0
-## v purrr   0.3.3     v forcats 0.5.0</code></pre>
-<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>df &lt;- read_csv(&quot;freqFile.txt&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   times_used = col_double(),
-##   count = col_double()
-## )</code></pre>
-<pre class="r"><code>#split the tail into one group
+library(tidyverse)
+df &lt;- read_csv(&quot;freqFile.txt&quot;)
+
+#split the tail into one group
 tail &lt;- df %&gt;% filter(times_used &gt; 20) %&gt;% summarize_all(sum) %&gt;% mutate(times_used = 21)
 
 #add tail to first group
 use &lt;- df %&gt;% filter(times_used &lt; 21)
 use &lt;- use %&gt;% full_join(tail) %&gt;% arrange(times_used)</code></pre>
-<pre><code>## Joining, by = c(&quot;times_used&quot;, &quot;count&quot;)</code></pre>
 <pre class="r"><code>ggplot(use, aes(x = factor(times_used), y = count)) + 
   geom_bar(stat = &quot;identity&quot;, position=position_dodge()) +
   scale_x_discrete(labels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;, &quot;13&quot;, &quot;14&quot;, &quot;15&quot;, &quot;16&quot;, &quot;17&quot;, &quot;18&quot;, &quot;19&quot;, &quot;20&quot;, &quot;21+&quot;)) +
