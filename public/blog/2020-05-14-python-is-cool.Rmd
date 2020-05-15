@@ -32,7 +32,7 @@ novel.close()
 print(lines[0:10])
 ```
 
-The next thing we will do is loop through the lines of text pulled from the text file. We will skip all line breaks (\n) and split the rest of the lines by spaces. Then we will remove all punctuation using regex. Using regex allows for words ending with or containing punctuation to be retained, just minus the punctuation. Any words that make it trough this process will be put into our wordList.
+The next thing we will do is loop through the lines of text pulled from the text file. We will skip all line breaks (\\n) and split the rest of the lines by spaces. Then we will make all words lowercase and remove all punctuation using regex. Using regex allows for words ending with or containing punctuation to be retained, just minus the punctuation. Any words that make it trough this process will be put into our wordList.
 
 ```{python}
 #loop through all lines in novel
@@ -113,7 +113,7 @@ freqFile.close()
 
 Now we have made a CSV we can access through R. Let's do that and create a simple bar plot of the data we have created.
 
-```{r}
+```{r results="hide"}
 library(readr)
 library(ggplot2)
 library(tidyverse)
@@ -125,7 +125,8 @@ tail <- df %>% filter(times_used > 20) %>% summarize_all(sum) %>% mutate(times_u
 #add tail to first group
 use <- df %>% filter(times_used < 21)
 use <- use %>% full_join(tail) %>% arrange(times_used)
-
+```
+```{r}
 ggplot(use, aes(x = factor(times_used), y = count)) + 
   geom_bar(stat = "identity", position=position_dodge()) +
   scale_x_discrete(labels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21+")) +

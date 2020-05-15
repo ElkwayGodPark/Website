@@ -113,7 +113,7 @@ freqFile.close()
 
 Now we have made a CSV we can access through R. Let's do that and create a simple bar plot of the data we have created.
 
-```{r results=hide}
+```{r results="hide"}
 library(readr)
 library(ggplot2)
 library(tidyverse)
